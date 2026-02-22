@@ -1,0 +1,32 @@
+<div class="login-container">
+    <form [formGroup]="loginForm" class="example-form" (ngSubmit)="onSubmit()">
+        <h1>Bienvenido</h1>
+        <p>Ingresa tus datos</p>
+        <mat-form-field class="example-full-width">
+            <mat-label>Correo</mat-label>
+            <input type="email" matInput formControlName="emailFormControl" placeholder="Ej. pat@example.com">
+            @if (emailFC?.hasError('email') && !emailFC?.hasError('required')) {
+            <mat-error>Por favor, ingrese una dirección de correo electrónico valida</mat-error>
+            }
+            @if (emailFC?.hasError('required')) {
+            <mat-error>El correo <strong>obligatorio</strong></mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width">
+            <mat-label>Contraseña</mat-label>
+            <input type="password" matInput formControlName="passwordFormControl" placeholder="********">
+            @if (passwordFC?.hasError('minlength') && !passwordFC?.hasError('required')) {
+            <mat-error>La contraseña debe de contener 8 caracteres o más</mat-error>
+            }
+            @if (passwordFC?.hasError('required')) {
+            <mat-error>La contraseña es <strong>obligatoria</strong></mat-error>
+            }
+        </mat-form-field>
+
+        <button class="login-button" type="submit" [disabled]="!loginForm.valid" matButton="filled">Iniciar Sesión</button>
+        <a href="#" class="register-link">¿No tienes una cuenta? </a>
+
+
+    </form>
+</div>

@@ -1,50 +1,63 @@
-.example-form {
-  min-width: 120px;
-  max-width: 500px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-bottom: 6%;
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f7f6;
+    padding: 20px;
 }
 
-.radio-group-register{
+.register-card {
+    max-width: 600px;
     width: 100%;
-    padding-left: 22px;
+    padding: 30px;
+    border-radius: 12px;
 }
 
-.radio-group-register label{
-    font-size: 18px;  
-    
-   
+.form-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
 }
 
-.gender-radiogroup{
-    padding-left: 20px;
-}
-
-.gender-radiobutton{
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
-.register-link{
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-.example-full-width {
-  width: 100%;
-}
-.register-button{
-    margin-top: 25px;
+.form-row {
+    display: flex;
+    gap: 16px;
     width: 100%;
+    mat-form-field { flex: 1; }
+}
+
+.full-width { width: 100%; }
+
+.gender-section {
+    padding: 10px 0;
+    label { font-weight: 500; margin-right: 15px; }
+}
+
+.file-section {
+    margin: 15px 0;
+    padding: 15px;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+    label { display: block; margin-bottom: 5px; font-weight: 500; }
+}
+
+.register-button {
     height: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
 }
 
-.register-container{
-    display: grid;
-    place-items: center;
-    height: 100vh;
-    width: 100vw;
+.login-link {
+    text-align: center;
+    margin-top: 15px;
+    text-decoration: none;
+    color: #3f51b5;
+    font-size: 14px;
+}
+
+@media (max-width: 600px) {
+    .form-row { flex-direction: column; gap: 0; }
 }

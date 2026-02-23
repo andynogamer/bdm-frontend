@@ -1,0 +1,88 @@
+.main-users-container {
+    padding: 30px 5%;
+    background-color: #f4f7f6;
+    min-height: 100vh;
+}
+
+.top-users-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+
+    h1 { margin: 0; color: #2c3e50; font-weight: 600; }
+    .spacer { flex: 1; }
+}
+
+.filter-users {
+    min-width: 250px;
+}
+
+.users-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.user-card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
+}
+
+.role-icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color: white;
+    
+    
+    &.role-1 { background-color: #1a237e; } // Admin
+    &.role-2 { background-color: #00897b; } // Ajustador
+    &.role-3 { background-color: #7e57c2; } // Asegurado
+}
+
+.user-image-container {
+    width: 100%;
+    height: 160px;
+    display: flex;
+    justify-content: center;
+    padding-top: 15px;
+
+    img {
+        height: 120px;
+        width: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #eee;
+    }
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    color: #666;
+    font-size: 0.9rem;
+    
+    mat-icon { font-size: 18px; width: 18px; height: 18px; }
+}
+
+.fab-bottom-right {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+}
+
+@media (max-width: 600px) {
+    .top-users-container { flex-direction: column; align-items: flex-start; }
+    .filter-users { width: 100%; }
+}

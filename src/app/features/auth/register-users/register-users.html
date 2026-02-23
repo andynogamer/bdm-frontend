@@ -1,76 +1,82 @@
 <div class="register-container">
-    <form [formGroup]="registerForm" class="example-form" (ngSubmit)="onSubmit()">
-        <h1>Registro</h1>
-        <p>Ingresa tus datos</p>
+    <mat-card class="register-card">
+        <mat-card-header>
+            <mat-card-title>Crea tu Cuenta</mat-card-title>
+            <mat-card-subtitle>Ingresa tus datos personales para acceder al sistema</mat-card-subtitle>
+        </mat-card-header>
 
-        <mat-form-field class="example-full-width">
-            <mat-label>Nombre(s)</mat-label>
-            <input type="text" matInput formControlName="nameFormControl" placeholder="Ej. Juan">
-            @if (nameFC?.hasError('required')) {
-            <mat-error>El nombre es <strong>obligatorio</strong></mat-error>
-            }
-        </mat-form-field>
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form-content">
+            
+            <div class="form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Nombre(s)</mat-label>
+                    <input matInput formControlName="nameFormControl" placeholder="Ej. Juan">
+                    @if (nameFC?.hasError('required')) {
+                        <mat-error>El nombre es <strong>obligatorio</strong></mat-error>
+                    }
+                </mat-form-field>
 
-        <mat-form-field class="example-full-width">
-            <mat-label>Apellido(s)</mat-label>
-            <input type="text" matInput formControlName="lastNameFormControl" placeholder="Ej. Pérez">
-            @if (lastNameFC?.hasError('required')) {
-            <mat-error>El apellido es <strong>obligatorio</strong></mat-error>
-            }
-        </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Apellido(s)</mat-label>
+                    <input matInput formControlName="lastNameFormControl" placeholder="Ej. Pérez">
+                    @if (lastNameFC?.hasError('required')) {
+                        <mat-error>El apellido es <strong>obligatorio</strong></mat-error>
+                    }
+                </mat-form-field>
+            </div>
 
-        <mat-form-field class="example-full-width">
-            <mat-label>Alias</mat-label>
-            <input type="text" matInput formControlName="aliasFormControl" placeholder="Ej. juan12345">
-            @if (aliasFC?.hasError('required')) {
-            <mat-error>El alias es <strong>obligatorio</strong></mat-error>
-            }
-        </mat-form-field>
+            <div class="form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Alias</mat-label>
+                    <input matInput formControlName="aliasFormControl" placeholder="Ej. juan12345">
+                    @if (aliasFC?.hasError('required')) {
+                        <mat-error>El alias es <strong>obligatorio</strong></mat-error>
+                    }
+                </mat-form-field>
 
+                <mat-form-field appearance="outline">
+                    <mat-label>Fecha de Nacimiento</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="birthDateFormControl">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                </mat-form-field>
+            </div>
 
-        <mat-form-field class="example-full-width">
-            <mat-label>Choose a date</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="birthDateFormControl">
-            <mat-hint>MM/DD/YYYY</mat-hint>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Correo electrónico</mat-label>
+                <input type="email" matInput formControlName="emailFormControl" placeholder="Ej. pat@example.com">
+                @if (emailFC?.hasError('email') && !emailFC?.hasError('required')) {
+                    <mat-error>Ingrese un correo electrónico válido</mat-error>
+                }
+            </mat-form-field>
 
-        
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Contraseña</mat-label>
+                <input type="password" matInput formControlName="passwordFormControl" placeholder="********">
+                @if (passwordFC?.hasError('minlength')) {
+                    <mat-error>Debe contener al menos 8 caracteres</mat-error>
+                }
+            </mat-form-field>
 
-        <mat-form-field class="example-full-width">
-            <mat-label>Correo</mat-label>
-            <input type="email" matInput formControlName="emailFormControl" placeholder="Ej. pat@example.com">
-            @if (emailFC?.hasError('email') && !emailFC?.hasError('required')) {
-            <mat-error>Por favor, ingrese una dirección de correo electrónico valida</mat-error>
-            }
-            @if (emailFC?.hasError('required')) {
-            <mat-error>El correo <strong>obligatorio</strong></mat-error>
-            }
-        </mat-form-field>
+            <div class="gender-section">
+                <label>Género: </label>
+                <mat-radio-group formControlName="genderFormControl" class="gender-radiogroup">
+                    <mat-radio-button value="male">Masculino</mat-radio-button>
+                    <mat-radio-button value="female">Femenino</mat-radio-button>
+                </mat-radio-group>
+            </div>
 
-        <mat-form-field class="example-full-width">
-            <mat-label>Contraseña</mat-label>
-            <input type="password" matInput formControlName="passwordFormControl" placeholder="********">
-            @if (passwordFC?.hasError('minlength') && !passwordFC?.hasError('required')) {
-            <mat-error>La contraseña debe de contener 8 caracteres o más</mat-error>
-            }
-            @if (passwordFC?.hasError('required')) {
-            <mat-error>La contraseña es <strong>obligatoria</strong></mat-error>
-            }
-        </mat-form-field>
+            <div class="file-section">
+                <label>Foto de Perfil:</label>
+                <input type="file" (change)="onFileSelected($event)" accept=".jpg,.png" />
+            </div>
 
-        <div class="radio-group-register">
-            <label>Genero: </label>
-            <mat-radio-group class="gender-radiogroup" formControlName="genderFormControl">
-                <mat-radio-button class="gender-radiobutton" value="male">Masculino</mat-radio-button>
-                <mat-radio-button class="gender-radiobutton" value="female">Femenino</mat-radio-button>
-            </mat-radio-group>
-        </div>
-
-        <button class="register-button" type="submit" [disabled]="!registerForm.valid" matButton="filled">Registrar</button>
-        <a href="login" class="register-link">¿Ya tienes una cuenta? </a>
-
-
-    </form>
+            <button mat-raised-button color="primary" class="register-button" [disabled]="!registerForm.valid">
+                REGISTRAR CUENTA
+            </button>
+            
+            <a href="login" class="login-link">¿Ya tienes una cuenta? Inicia sesión aquí</a>
+        </form>
+    </mat-card>
 </div>

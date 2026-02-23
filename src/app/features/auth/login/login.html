@@ -1,32 +1,39 @@
 <div class="login-container">
-    <form [formGroup]="loginForm" class="example-form" (ngSubmit)="onSubmit()">
-        <h1>Bienvenido</h1>
-        <p>Ingresa tus datos</p>
-        <mat-form-field class="example-full-width">
-            <mat-label>Correo</mat-label>
-            <input type="email" matInput formControlName="emailFormControl" placeholder="Ej. pat@example.com">
-            @if (emailFC?.hasError('email') && !emailFC?.hasError('required')) {
-            <mat-error>Por favor, ingrese una dirección de correo electrónico valida</mat-error>
-            }
-            @if (emailFC?.hasError('required')) {
-            <mat-error>El correo <strong>obligatorio</strong></mat-error>
-            }
-        </mat-form-field>
+    <mat-card class="login-card">
+        <mat-card-header>
+            <mat-card-title>Bienvenido al Sistema</mat-card-title>
+            <mat-card-subtitle>Ingresa tus credenciales para continuar</mat-card-subtitle>
+        </mat-card-header>
 
-        <mat-form-field class="example-full-width">
-            <mat-label>Contraseña</mat-label>
-            <input type="password" matInput formControlName="passwordFormControl" placeholder="********">
-            @if (passwordFC?.hasError('minlength') && !passwordFC?.hasError('required')) {
-            <mat-error>La contraseña debe de contener 8 caracteres o más</mat-error>
-            }
-            @if (passwordFC?.hasError('required')) {
-            <mat-error>La contraseña es <strong>obligatoria</strong></mat-error>
-            }
-        </mat-form-field>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form-content">
+            
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Correo electrónico</mat-label>
+                <input type="email" matInput formControlName="emailFormControl" placeholder="ejemplo@correo.com">
+                @if (emailFC?.hasError('email') && !emailFC?.hasError('required')) {
+                    <mat-error>Ingrese una dirección de correo válida</mat-error>
+                }
+                @if (emailFC?.hasError('required')) {
+                    <mat-error>El correo es <strong>obligatorio</strong></mat-error>
+                }
+            </mat-form-field>
 
-        <button class="login-button" type="submit" [disabled]="!loginForm.valid" matButton="filled">Iniciar Sesión</button>
-        <a href="register-users" class="register-link">¿No tienes una cuenta? </a>
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Contraseña</mat-label>
+                <input type="password" matInput formControlName="passwordFormControl" placeholder="********">
+                @if (passwordFC?.hasError('minlength') && !passwordFC?.hasError('required')) {
+                    <mat-error>Mínimo 8 caracteres</mat-error>
+                }
+                @if (passwordFC?.hasError('required')) {
+                    <mat-error>La contraseña es <strong>obligatoria</strong></mat-error>
+                }
+            </mat-form-field>
 
-
-    </form>
+            <button mat-raised-button color="primary" class="login-button" [disabled]="!loginForm.valid">
+                INICIAR SESIÓN
+            </button>
+            
+            <a href="register-users" class="register-link">¿No tienes una cuenta? Regístrate aquí</a>
+        </form>
+    </mat-card>
 </div>

@@ -1,0 +1,72 @@
+<app-header></app-header>
+
+<div class="detail-container" *ngIf="siniestro">
+    <mat-card class="main-card">
+        <mat-card-header>
+            <mat-icon mat-card-avatar>assignment</mat-icon>
+            <mat-card-title>Siniestro #{{siniestro.id}} - {{siniestro.insurance}}</mat-card-title>
+            <mat-card-subtitle>Póliza: {{siniestro.policyNumber}}</mat-card-subtitle>
+            <span class="spacer"></span>
+            <mat-chip [ngClass]="'status-' + siniestro.estatus">
+                {{ getStatusName(siniestro.estatus) }}
+            </mat-chip>
+        </mat-card-header>
+
+        <mat-tab-group dynamicHeight>
+            <mat-tab label="Detalles Técnicos">
+                <div class="tab-content grid-details">
+                    <div class="info-group">
+                        <label>Asegurado:</label>
+                        <p>{{siniestro.userAffected}}</p>
+                    </div>
+                    <div class="info-group">
+                        <label>Datos de la Unidad:</label>
+                        <p>{{siniestro.unitData}}</p>
+                    </div>
+                    <div class="info-group">
+                        <label>Ubicación:</label>
+                        <p>{{siniestro.location}}</p>
+                    </div>
+                    <div class="info-group">
+                        <label>Fecha del Incidente:</label>
+                        <p>{{siniestro.accidentDate | date:'medium'}}</p>
+                    </div>
+                    <div class="info-group full-width">
+                        <label>Descripción del Suceso:</label>
+                        <p>{{siniestro.description}}</p>
+                    </div>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="Multimedia">
+                <div class="tab-content gallery">
+                    <div class="image-grid">
+                        <img *ngFor="let img of images" [src]="img" class="evidence-img">
+                        <p *ngIf="images.length === 0">No hay evidencia cargada.</p>
+                    </div>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="Seguimiento">
+                <div class="tab-content chat-container">
+                    <div class="chat-history">
+                        <div class="message incoming">
+                            <strong>Ajustador:</strong> Registrando daños iniciales.
+                        </div>
+                        <div class="message outgoing">
+                            <strong>Yo (Asegurado):</strong> ¿Cuándo se autoriza la reparación?
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <mat-form-field appearance="outline">
+                            <input matInput placeholder="Escribe un comentario...">
+                            <button mat-icon-button matSuffix color="primary">
+                                <mat-icon>send</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card>
+</div>

@@ -6,16 +6,19 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatButtonModule} from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 
 @Component({
   selector: 'app-register-users',
   providers: [provideNativeDateAdapter()],
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatRadioModule, MatDatepickerModule,MatButtonModule ],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatRadioModule, MatDatepickerModule,MatButtonModule, MatCardModule ],
   templateUrl: './register-users.html',
   styleUrl: './register-users.scss',
 })
 export class RegisterUsers {
+  selectedFile: File | null = null;
+
   registerForm = new FormGroup({
     nameFormControl: new FormControl('', [Validators.required]),
     lastNameFormControl: new FormControl('', [Validators.required]),
@@ -23,7 +26,8 @@ export class RegisterUsers {
     genderFormControl: new FormControl('', [Validators.required]),
     birthDateFormControl: new FormControl('', [Validators.required]),
     emailFormControl: new FormControl('', [Validators.required, Validators.email]),
-    passwordFormControl: new FormControl('', [Validators.required, Validators.minLength(8)])
+    passwordFormControl: new FormControl('', [Validators.required, Validators.minLength(8)]),
+    imageFormControl: new FormControl('', [Validators.required])
   })
 
   get nameFC(){
@@ -44,6 +48,18 @@ export class RegisterUsers {
   get passwordFC(){
     return this.registerForm.get('passwordFormControl');
   }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      
+      this.registerForm.patchValue({ imageFormControl: file });
+      this.registerForm.get('imageFormControl')?.updateValueAndValidity();
+    }
+  }
+ 
+  
 
 
   onSubmit(){

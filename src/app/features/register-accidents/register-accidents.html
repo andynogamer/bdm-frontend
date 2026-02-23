@@ -1,0 +1,66 @@
+<app-header></app-header>
+<div class="register-container">
+    <form [formGroup]="registerForm" class="accidents-form" (ngSubmit)="onSubmit()">
+        <h1>Registro de Siniestro</h1>
+        <p>Captura la información detallada del incidente</p>
+
+        <div class="form-row">
+            <mat-form-field appearance="outline">
+                <mat-label>Compañía de Seguros</mat-label>
+                <mat-select formControlName="insuranceCompany">
+                    <mat-option value="Qualitas">Qualitas</mat-option>
+                    <mat-option value="GNP">GNP</mat-option>
+                    <mat-option value="AXA">AXA</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Número de Póliza</mat-label>
+                <input matInput formControlName="policyNumber" placeholder="Ej. POL-12345">
+            </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Datos del Cliente (Nombre completo)</mat-label>
+            <input matInput formControlName="clientData">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Datos de la Unidad (Placas, Serie, Modelo)</mat-label>
+            <input matInput formControlName="unitData">
+        </mat-form-field>
+
+        <div class="form-row">
+            <mat-form-field appearance="outline">
+                <mat-label>Fecha del Siniestro</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="accidentDate">
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Ubicación (Calle, Ciudad)</mat-label>
+                <input matInput formControlName="location">
+            </mat-form-field>
+        </div>
+
+        <mat-checkbox formControlName="otherUnitsInvolved" class="mb-20">
+            ¿Hubo otras unidades involucradas?
+        </mat-checkbox>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Descripción de lo sucedido</mat-label>
+            <textarea matInput formControlName="description" rows="4"></textarea>
+        </mat-form-field>
+
+        <div class="multimedia-section">
+            <label>Evidencia Multimedia (Fotos y Videos): </label>
+            <input type="file" (change)="onFilesSelected($event)" accept="image/*,video/*" multiple />
+            <p class="hint">Las imágenes se guardarán como BLOB en la BD.</p>
+        </div>
+
+        <button class="submit-button" type="submit" [disabled]="!registerForm.valid" mat-raised-button color="primary">
+            Registrar Siniestro
+        </button>
+    </form>
+</div>

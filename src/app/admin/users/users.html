@@ -1,1 +1,65 @@
-<p>users works!</p>
+<app-header></app-header>
+
+<div class="main-users-container">
+    <div class="top-users-container">
+        <h1>Gestión de Usuarios</h1>
+        <span class="spacer"></span>
+        <mat-form-field appearance="outline" class="filter-users">
+            <mat-label>Filtrar por tipo</mat-label>
+            <mat-select [(value)]="typeUserSelected">
+                <mat-option value="option0">Todos los usuarios</mat-option>
+                <mat-option value="option1">Administradores</mat-option>
+                <mat-option value="option2">Ajustadores</mat-option>
+                <mat-option value="option3">Asegurados</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="users-grid">
+        @for(usuario of dataSource; track usuario.id){
+            @if(typeUserSelected === 'option0' || 
+                (typeUserSelected === 'option1' && usuario.rol === 1) ||
+                (typeUserSelected === 'option2' && usuario.rol === 2) ||
+                (typeUserSelected === 'option3' && usuario.rol === 3)) {
+                
+                <mat-card class="user-card" appearance="raised">
+                    <mat-card-header>
+                        <div mat-card-avatar class="role-icon-container" [ngClass]="'role-' + usuario.rol">
+                            <mat-icon>{{ usuario.rol === 1 ? 'admin_panel_settings' : (usuario.rol === 2 ? 'assignment_ind' : 'person') }}</mat-icon>
+                        </div>
+                        <mat-card-title>{{usuario.name}} {{usuario.lastName}}</mat-card-title>
+                        <mat-card-subtitle>{{ getRoleName(usuario.rol) }}</mat-card-subtitle>
+                    </mat-card-header>
+                    
+                    <div class="user-image-container">
+                        <img [src]="getImageUrl(usuario.photo)" alt="Foto de perfil">
+                    </div>
+
+                    <mat-card-content>
+                        <div class="info-item">
+                            <mat-icon>email</mat-icon>
+                            <span>{{usuario.correo}}</span>
+                        </div>
+                        <div class="info-item">
+                            <mat-icon>alternate_email</mat-icon>
+                            <span>{{usuario.alias}}</span>
+                        </div>
+                    </mat-card-content>
+
+                    <mat-card-actions align="end">
+                        <button mat-icon-button color="primary" matTooltip="Editar usuario">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" matTooltip="Dar de baja">
+                            <mat-icon>person_remove</mat-icon>
+                        </button>
+                    </mat-card-actions>
+                </mat-card>
+            }
+        }
+    </div>
+
+    <button mat-fab class="fab-bottom-right" color="primary" routerLink="/admin-register" matTooltip="Registrar nuevo empleado">
+        <mat-icon>person_add</mat-icon>
+    </button>
+</div>

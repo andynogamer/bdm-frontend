@@ -1,0 +1,50 @@
+.example-form {
+  min-width: 120px;
+  max-width: 500px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 6%;
+}
+
+.radio-group-register{
+    width: 100%;
+    padding-left: 22px;
+}
+
+.radio-group-register label{
+    font-size: 18px;  
+    
+   
+}
+
+.gender-radiogroup{
+    padding-left: 20px;
+}
+
+.gender-radiobutton{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.register-link{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.example-full-width {
+  width: 100%;
+}
+.register-button{
+    margin-top: 25px;
+    width: 100%;
+    height: 50px;
+}
+
+.register-container{
+    display: grid;
+    place-items: center;
+    height: 100vh;
+    width: 100vw;
+}

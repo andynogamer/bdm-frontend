@@ -10,7 +10,7 @@
             <div class="form-row">
                 <mat-form-field appearance="outline">
                     <mat-label>Nombre(s)</mat-label>
-                    <input matInput formControlName="nameFormControl" placeholder="Ej. Juan">
+                    <input matInput formControlName="nombre" placeholder="Ej. Juan">
                     @if (nameFC?.hasError('required')) {
                         <mat-error>El nombre es <strong>obligatorio</strong></mat-error>
                     }
@@ -18,7 +18,7 @@
 
                 <mat-form-field appearance="outline">
                     <mat-label>Apellido(s)</mat-label>
-                    <input matInput formControlName="lastNameFormControl" placeholder="Ej. Pérez">
+                    <input matInput formControlName="apellido" placeholder="Ej. Pérez">
                     @if (lastNameFC?.hasError('required')) {
                         <mat-error>El apellido es <strong>obligatorio</strong></mat-error>
                     }
@@ -28,7 +28,7 @@
             <div class="form-row">
                 <mat-form-field appearance="outline">
                     <mat-label>Alias</mat-label>
-                    <input matInput formControlName="aliasFormControl" placeholder="Ej. juan12345">
+                    <input matInput formControlName="alias" placeholder="Ej. juan12345">
                     @if (aliasFC?.hasError('required')) {
                         <mat-error>El alias es <strong>obligatorio</strong></mat-error>
                     }
@@ -36,7 +36,7 @@
 
                 <mat-form-field appearance="outline">
                     <mat-label>Fecha de Nacimiento</mat-label>
-                    <input matInput [matDatepicker]="picker" formControlName="birthDateFormControl">
+                    <input matInput [matDatepicker]="picker" formControlName="fecha_nacimiento">
                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                     <mat-hint>MM/DD/YYYY</mat-hint>
@@ -45,7 +45,7 @@
 
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Correo electrónico</mat-label>
-                <input type="email" matInput formControlName="emailFormControl" placeholder="Ej. pat@example.com">
+                <input type="email" matInput formControlName="correo_electronico" placeholder="Ej. pat@example.com">
                 @if (emailFC?.hasError('email') && !emailFC?.hasError('required')) {
                     <mat-error>Ingrese un correo electrónico válido</mat-error>
                 }
@@ -53,7 +53,7 @@
 
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Contraseña</mat-label>
-                <input type="password" matInput formControlName="passwordFormControl" placeholder="********">
+                <input type="password" matInput formControlName="contrasena" placeholder="********">
                 @if (passwordFC?.hasError('minlength')) {
                     <mat-error>Debe contener al menos 8 caracteres</mat-error>
                 }
@@ -61,9 +61,10 @@
 
             <div class="gender-section">
                 <label>Género: </label>
-                <mat-radio-group formControlName="genderFormControl" class="gender-radiogroup">
-                    <mat-radio-button value="male">Masculino</mat-radio-button>
-                    <mat-radio-button value="female">Femenino</mat-radio-button>
+                <mat-radio-group formControlName="genero" class="gender-radiogroup">
+                    <mat-radio-button value="M">Masculino</mat-radio-button>
+                    <mat-radio-button value="F">Femenino</mat-radio-button>
+                    <mat-radio-button value="X">Otro</mat-radio-button>
                 </mat-radio-group>
             </div>
 

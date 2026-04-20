@@ -16,29 +16,29 @@
     </div>
 
     <div class="users-grid">
-        @for(usuario of dataSource; track usuario.id){
+        @for(usuario of user.users; track usuario.id){
             @if(typeUserSelected === 'option0' || 
-                (typeUserSelected === 'option1' && usuario.rol === 1) ||
-                (typeUserSelected === 'option2' && usuario.rol === 2) ||
-                (typeUserSelected === 'option3' && usuario.rol === 3)) {
+                (typeUserSelected === 'option1' && usuario.tipo_usuario === 2) ||
+                (typeUserSelected === 'option2' && usuario.tipo_usuario === 1) ||
+                (typeUserSelected === 'option3' && usuario.tipo_usuario === 0)) {
                 
                 <mat-card class="user-card" appearance="raised">
                     <mat-card-header>
-                        <div mat-card-avatar class="role-icon-container" [ngClass]="'role-' + usuario.rol">
-                            <mat-icon>{{ usuario.rol === 1 ? 'admin_panel_settings' : (usuario.rol === 2 ? 'assignment_ind' : 'person') }}</mat-icon>
+                        <div mat-card-avatar class="role-icon-container" [ngClass]="'role-' + usuario.tipo_usuario">
+                            <mat-icon>{{ usuario.tipo_usuario === 2 ? 'admin_panel_settings' : (usuario.tipo_usuario === 1 ? 'assignment_ind' : 'person') }}</mat-icon>
                         </div>
-                        <mat-card-title>{{usuario.name}} {{usuario.lastName}}</mat-card-title>
-                        <mat-card-subtitle>{{ getRoleName(usuario.rol) }}</mat-card-subtitle>
+                        <mat-card-title>{{usuario.nombre}} {{usuario.apellido}}</mat-card-title>
+                        <mat-card-subtitle>{{ getRoleName(usuario.tipo_usuario) }}</mat-card-subtitle>
                     </mat-card-header>
                     
                     <div class="user-image-container">
-                        <img [src]="getImageUrl(usuario.photo)" alt="Foto de perfil">
+                        <img [src]="getImageUrl(usuario.foto)" alt="Foto de perfil">
                     </div>
 
                     <mat-card-content>
                         <div class="info-item">
                             <mat-icon>email</mat-icon>
-                            <span>{{usuario.correo}}</span>
+                            <span>{{usuario.correo_electronico}}</span>
                         </div>
                         <div class="info-item">
                             <mat-icon>alternate_email</mat-icon>

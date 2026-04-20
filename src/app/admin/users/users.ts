@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 import {MatSelectModule} from '@angular/material/select';
 import { Usuario } from '../../core/models/usuario.model';
@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { User } from '../../services/user';
 
 @Component({
   selector: 'app-users',
@@ -20,7 +21,42 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
   templateUrl: './users.html',
   styleUrl: './users.scss',
 })
-export class Users {
+export class Users implements OnInit {
+
+  constructor(public user: User, private sanitizer: DomSanitizer) {}
+  ngOnInit(): void {
+    this.getUsers();
+  }
+  getUsers(){
+    this.user.getUsers().subscribe({
+      next: (data) => {
+        this.user.users = data;
+      },
+      error: (e) => {
+        console.log(e);
+      }
+    })
+  }
+  typeUserSelected = "option0";
+  getRoleName(rol: number): string {
+    const roles: { [key: number]: string } = { 2: 'Administrador', 1: 'Ajustador', 0: 'Asegurado' };
+    return roles[rol] || 'Usuario';
+  }
+
+  
+  getImageUrl(fotoBase64: string | null): SafeUrl {
+    
+    if (!fotoBase64) {
+      return 'assets/default-user.png';
+    }
+
+    
+    const header = 'data:image/png;base64,'; 
+    return this.sanitizer.bypassSecurityTrustUrl(header + fotoBase64);
+  }
+
+  
+  /*
   typeUserSelected = "option0";
   dataSource = USUARIOS_DUMMY;
 
@@ -38,4 +74,5 @@ export class Users {
     const roles: { [key: number]: string } = { 1: 'Administrador', 2: 'Ajustador', 3: 'Asegurado' };
     return roles[rol] || 'Usuario';
   }
+    */
 }

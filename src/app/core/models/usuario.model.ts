@@ -1,5 +1,5 @@
 export interface Usuario {
-    id: number;
+    id?: number;
     name: string;
     lastName: string;
     birthDate: Date;
@@ -8,5 +8,5 @@ export interface Usuario {
     correo: string;
     contrasena?: string;
     alias: string;
-    rol: number;
+    rol?: number;
 }

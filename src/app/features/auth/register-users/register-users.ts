@@ -7,6 +7,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatButtonModule} from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { User } from '../../../services/user';
 
 
 @Component({
@@ -20,50 +21,67 @@ export class RegisterUsers {
   selectedFile: File | null = null;
 
   registerForm = new FormGroup({
-    nameFormControl: new FormControl('', [Validators.required]),
-    lastNameFormControl: new FormControl('', [Validators.required]),
-    aliasFormControl: new FormControl('',[Validators.required, Validators.minLength(4), Validators.maxLength(20)] ),
-    genderFormControl: new FormControl('', [Validators.required]),
-    birthDateFormControl: new FormControl('', [Validators.required]),
-    emailFormControl: new FormControl('', [Validators.required, Validators.email]),
-    passwordFormControl: new FormControl('', [Validators.required, Validators.minLength(8)]),
-    imageFormControl: new FormControl('', [Validators.required])
+    nombre: new FormControl('', [Validators.required]),
+    apellido: new FormControl('', [Validators.required]),
+    alias: new FormControl('',[Validators.required, Validators.minLength(4), Validators.maxLength(20)] ),
+    genero: new FormControl('', [Validators.required]),
+    fecha_nacimiento: new FormControl('', [Validators.required]),
+    correo_electronico: new FormControl('', [Validators.required, Validators.email]),
+    contrasena: new FormControl('', [Validators.required, Validators.minLength(8)]),
+    foto: new FormControl(''),
+    tipo_usuario: new FormControl(0)
   })
 
   get nameFC(){
-    return this.registerForm.get('nameFormControl')
+    return this.registerForm.get('nombre')
   }
 
   get lastNameFC(){
-    return this.registerForm.get('lastNameFormControl')
+    return this.registerForm.get('apellido')
   }
 
   get aliasFC(){
-    return this.registerForm.get('aliasFormControl')
+    return this.registerForm.get('alias')
   }
 
   get emailFC(){
-    return this.registerForm.get('emailFormControl');
+    return this.registerForm.get('correo_electronico');
   }
   get passwordFC(){
-    return this.registerForm.get('passwordFormControl');
+    return this.registerForm.get('contrasena');
   }
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
+
     if (file) {
-      this.selectedFile = file;
-      
-      this.registerForm.patchValue({ imageFormControl: file });
-      this.registerForm.get('imageFormControl')?.updateValueAndValidity();
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const base64 = reader.result as string;
+
+        this.registerForm.patchValue({
+          foto: base64
+        });
+      };
+
+      reader.readAsDataURL(file);
     }
   }
  
   
-
+  constructor(public user: User) {}
 
   onSubmit(){
-    console.warn(this.registerForm.value)
+    console.log(this.registerForm.value);
+    this.user.postUser(this.registerForm.value).subscribe({
+      next: (data) => {
+        console.log(data);
+      },
+      error: (e) =>{
+        console.log(e);
+      }
+    });
   }
 
 }

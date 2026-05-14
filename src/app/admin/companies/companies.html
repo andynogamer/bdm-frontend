@@ -1,34 +1,18 @@
 <app-header></app-header>
 
-<div class="register-employees-container">
+<div class="companies-container">
     <div class="left-panel">
         <div class="left-content">
             <div class="hero-text">
-                <h2>Registro de<br><span>Empleados</span></h2>
-                <p>Ingresa los datos del personal para el sistema de gestión de seguros.</p>
+                <h2>Gestión de<br><span>Compañias</span></h2>
+                <p>Administra los perfiles de compañias registradas en el sistema.</p>
             </div>
-            <div class="info-cards">
-                <div class="info-card">
-                    <mat-icon>admin_panel_settings</mat-icon>
-                    <div>
-                        <strong>Administradores</strong>
-                        <span>Control total del sistema</span>
-                    </div>
+            <div class="stats-summary">
+                <div class="stat-item">
+                    <div class="stat-number">{{getTotalCompanies()}}</div>
+                    <div class="stat-label">Total Compañias</div>
                 </div>
-                <div class="info-card">
-                    <mat-icon>assignment_ind</mat-icon>
-                    <div>
-                        <strong>Ajustadores</strong>
-                        <span>Gestión de siniestros</span>
-                    </div>
-                </div>
-                <div class="info-card">
-                    <mat-icon>person</mat-icon>
-                    <div>
-                        <strong>Asegurados</strong>
-                        <span>Clientes y beneficiarios</span>
-                    </div>
-                </div>
+                
             </div>
         </div>
         <div class="decorative-circles">
@@ -40,151 +24,47 @@
     </div>
 
     <div class="right-panel">
-        <div class="form-header">
-            <h1>Registro de Nuevo Empleado</h1>
-            <p class="subtitle">Completa todos los campos para registrar al personal</p>
+        <div class="companies-header">
+            <div class="header-title">
+                <h1>Gestión de Compañias</h1>
+                <p class="subtitle">Visualiza y administra todas las compañias registradas</p>
+            </div>
+            
         </div>
 
-        <!-- Mensajes de éxito/error -->
-        @if (mensajeExito) {
-            <div class="success-message">
-                <mat-icon>check_circle</mat-icon>
-                <span>{{ mensajeExito }}</span>
-            </div>
-        }
+        <div class="companies-grid">
+            @for(company of company.companies; track company.id_compania){
+                <mat-card class="company-card" appearance="outlined">
+                    <div class="company-card-header">
+                        <div class="company-name">
+                            <h3>{{company.nombre}}</h3>
+                            <span class="role-name">Empresa</span>
+                        </div>
+                    </div>
 
-        @if (mensajeError) {
-            <div class="error-message">
-                <mat-icon>error</mat-icon>
-                <span>{{ mensajeError }}</span>
-            </div>
-        }
+                    <div class="company-image-container">
+                        <img [src]="getImageUrl(company.logo)" alt="Foto de perfil">
+                    </div>
 
-        @if (isLoading) {
-            <div class="loading-message">
-                <mat-spinner diameter="24"></mat-spinner>
-                <span>Registrando usuario...</span>
-            </div>
-        }
+                    
 
-        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form-content">
-            <div class="form-row">
-                <mat-form-field appearance="outline">
-                    <mat-label>Nombre(s)</mat-label>
-                    <mat-icon matPrefix>person</mat-icon>
-                    <input matInput formControlName="nameFormControl" placeholder="Ej. Juan">
-                    @if (nameFC?.hasError('required')) {
-                        <mat-error>El nombre es <strong>obligatorio</strong></mat-error>
-                    }
-                </mat-form-field>
+                    <div class="company-actions">
+                        <button mat-button class="action-btn edit-btn" matTooltip="Editar compañia">
+                            <mat-icon>edit</mat-icon>
+                            <span>Editar</span>
+                        </button>
+                        <button mat-button class="action-btn delete-btn" matTooltip="Dar de baja">
+                            <mat-icon>remove_circle_outline</mat-icon>
+                            <span>Eliminar</span>
+                        </button>
+                    </div>
+                </mat-card>
+            
+            }
+        </div>
 
-                <mat-form-field appearance="outline">
-                    <mat-label>Apellido(s)</mat-label>
-                    <mat-icon matPrefix>people</mat-icon>
-                    <input matInput formControlName="lastNameFormControl" placeholder="Ej. Pérez">
-                    @if (lastNameFC?.hasError('required')) {
-                        <mat-error>El apellido es <strong>obligatorio</strong></mat-error>
-                    }
-                </mat-form-field>
-            </div>
-
-            <div class="form-row">
-                <mat-form-field appearance="outline">
-                    <mat-label>Alias</mat-label>
-                    <mat-icon matPrefix>badge</mat-icon>
-                    <input matInput formControlName="aliasFormControl" placeholder="Ej. juan123">
-                    @if (aliasFC?.hasError('required')) {
-                        <mat-error>El alias es <strong>obligatorio</strong></mat-error>
-                    }
-                    @if (aliasFC?.hasError('minlength')) {
-                        <mat-error>El alias debe tener al menos 4 caracteres</mat-error>
-                    }
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                    <mat-label>Fecha de Nacimiento</mat-label>
-                    <mat-icon matPrefix>cake</mat-icon>
-                    <input matInput [matDatepicker]="picker" formControlName="birthDateFormControl">
-                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                    <mat-hint>Debe ser mayor de 18 años</mat-hint>
-                </mat-form-field>
-            </div>
-
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Correo Electrónico</mat-label>
-                <mat-icon matPrefix>email</mat-icon>
-                <input type="email" matInput formControlName="emailFormControl" placeholder="pat@example.com">
-                @if (emailFC?.hasError('required')) {
-                    <mat-error>El correo es <strong>obligatorio</strong></mat-error>
-                }
-                @if (emailFC?.hasError('email')) {
-                    <mat-error>Ingrese un correo válido</mat-error>
-                }
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Contraseña</mat-label>
-                <mat-icon matPrefix>lock</mat-icon>
-                <input [type]="hidePassword ? 'password' : 'text'" matInput formControlName="passwordFormControl">
-                <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
-                    <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-                </button>
-                <mat-hint>Mínimo 8 caracteres, mayúscula, minúscula, número y símbolo</mat-hint>
-                @if (passwordFC?.hasError('required')) {
-                    <mat-error>La contraseña es <strong>obligatoria</strong></mat-error>
-                }
-                @if (passwordFC?.hasError('minlength')) {
-                    <mat-error>La contraseña debe tener al menos 8 caracteres</mat-error>
-                }
-            </mat-form-field>
-
-            <div class="form-row">
-                <mat-form-field appearance="outline">
-                    <mat-label>Tipo de Usuario</mat-label>
-                    <mat-icon matPrefix>work</mat-icon>
-                    <mat-select formControlName="userTypeFormControl">
-                        <mat-option value="2">Administrador</mat-option>
-                        <mat-option value="1">Ajustador</mat-option>
-                        <mat-option value="0">Asegurado</mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <div class="gender-section">
-                    <label>Género</label>
-                    <mat-radio-group formControlName="genderFormControl" class="gender-group">
-                        <mat-radio-button value="male">
-                            <mat-icon>male</mat-icon>
-                            Masculino
-                        </mat-radio-button>
-                        <mat-radio-button value="female">
-                            <mat-icon>female</mat-icon>
-                            Femenino
-                        </mat-radio-button>
-                    </mat-radio-group>
-                </div>
-            </div>
-
-            <div class="file-upload" (click)="fileInput.click()">
-                <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none">
-                <div class="upload-area">
-                    <mat-icon>cloud_upload</mat-icon>
-                    <span *ngIf="!selectedFile">Subir foto de perfil</span>
-                    <span *ngIf="selectedFile">{{selectedFile.name}}</span>
-                    <small>Formatos: JPG, PNG (máx. 5MB)</small>
-                </div>
-                <div *ngIf="selectedFilePreview" class="image-preview">
-                    <img [src]="selectedFilePreview" alt="Vista previa">
-                    <button type="button" class="remove-image" (click)="removeImage($event)">
-                        <mat-icon>close</mat-icon>
-                    </button>
-                </div>
-            </div>
-
-            <button mat-raised-button class="submit-btn" type="submit" [disabled]="!registerForm.valid || isLoading">
-                {{ isLoading ? 'REGISTRANDO...' : 'REGISTRAR EMPLEADO' }}
-                <mat-icon>send</mat-icon>
-            </button>
-        </form>
+        <button mat-fab class="fab-button" color="primary" routerLink="/register-company" matTooltip="Registrar nueva compañia">
+            <mat-icon>add</mat-icon>
+        </button>
     </div>
 </div>

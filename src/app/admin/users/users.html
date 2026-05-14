@@ -8,30 +8,28 @@
                 <p>Administra los perfiles de asegurados, ajustadores y administradores del sistema.</p>
             </div>
             <div class="stats-summary">
+                @if(totalUsers > 0){
                 <div class="stat-item">
-                    <div class="stat-number">{{getTotalUsers()}}</div>
+                    <div class="stat-number">{{totalUsers}}</div>
                     <div class="stat-label">Total Usuarios</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">{{getUsersByType(2)}}</div>
+                    <div class="stat-number">{{totalAdministradores}}</div>
                     <div class="stat-label">Administradores</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">{{getUsersByType(1)}}</div>
+                    <div class="stat-number">{{totalAjustadores}}</div>
                     <div class="stat-label">Ajustadores</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">{{getUsersByType(0)}}</div>
+                    <div class="stat-number">{{totalAsegurados}}</div>
                     <div class="stat-label">Asegurados</div>
                 </div>
+                }
             </div>
         </div>
         <div class="decorative-circles">
-            <div class="circle circle-1"></div>
-            <div class="circle circle-2"></div>
-            <div class="circle circle-3"></div>
-            <div class="circle circle-4"></div>
-        </div>
+            </div>
     </div>
 
     <div class="right-panel">
@@ -53,7 +51,7 @@
         </div>
 
         <div class="users-grid">
-            @for(usuario of user.users; track usuario.id){
+            @for(usuario of listaUsers; track usuario.id_usuario){
                 @if(typeUserSelected === 'option0' || 
                     (typeUserSelected === 'option1' && usuario.tipo_usuario === 2) ||
                     (typeUserSelected === 'option2' && usuario.tipo_usuario === 1) ||
@@ -66,12 +64,12 @@
                             </div>
                             <div class="user-name">
                                 <h3>{{usuario.nombre}} {{usuario.apellido}}</h3>
-                                <span class="role-name">{{ getRoleName(usuario.tipo_usuario) }}</span>
+                                <span class="role-name">{{ usuario.safeRoleName }}</span>
                             </div>
                         </div>
 
                         <div class="user-image-container">
-                            <img [src]="getImageUrl(usuario.foto)" alt="Foto de perfil">
+                            <img [src]="usuario.safeFoto" alt="Foto de perfil">
                         </div>
 
                         <div class="user-info">
@@ -97,6 +95,8 @@
                         </div>
                     </mat-card>
                 }
+            } @empty {
+                <p style="text-align: center; width: 100%;">No hay usuarios para mostrar.</p>
             }
         </div>
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { Header } from '../../shared/header/header';
@@ -12,6 +12,7 @@ import { Company } from '../../services/company';
 
 @Component({
   selector: 'app-companies',
+  standalone: true, // Angular 21 requiere esto si no usas módulos
   imports: [
     CommonModule, MatCardModule, MatSelectModule, MatButtonModule, 
     MatIconModule, MatTooltipModule, Header, RouterModule
@@ -20,25 +21,39 @@ import { Company } from '../../services/company';
   styleUrl: './companies.scss',
 })
 export class Companies implements OnInit {
+  totalCompanies = 0;
+  // 1. CREAMOS UNA VARIABLE LOCAL PARA GUARDAR LA DATA
+  listaCompanias: any[] = []; 
 
-  constructor(public company: Company, private sanitizer: DomSanitizer) {}
+  constructor(
+    public companyService: Company, // 2. RENOMBRAMOS EL SERVICIO PARA EVITAR COLISIONES
+    private sanitizer: DomSanitizer,
+    private cdr: ChangeDetectorRef
+  ) {}
   
   ngOnInit(): void {
-    this.getUsers();
+    this.getCompanies();
   }
   
-  getUsers() {
-    this.company.getCompanies().subscribe({
-      next: (data) => {
-        this.company.companies = data;
+  getCompanies() {
+    this.companyService.getCompanies().subscribe({
+      next: (data: any[]) => {
+        // 3. ASIGNAMOS A LA VARIABLE LOCAL Y PRE-CARGAMOS LAS IMÁGENES
+        this.listaCompanias = data.map(c => ({
+          ...c,
+          safeLogo: this.getImageUrl(c.logo) 
+        }));
+        
+        this.totalCompanies = this.listaCompanias.length;
+        
+        // 4. AVISAMOS A ANGULAR QUE LA DATA ESTÁ LISTA
+        this.cdr.detectChanges(); 
       },
       error: (e) => {
-        console.log(e);
+        console.error('Error al cargar compañias:', e);
       }
     });
   }
-  
-  typeUserSelected = "option0";
   
   getRoleName(rol: number): string {
     const roles: { [key: number]: string } = { 2: 'Administrador', 1: 'Ajustador', 0: 'Asegurado' };
@@ -52,14 +67,4 @@ export class Companies implements OnInit {
     const header = 'data:image/png;base64,'; 
     return this.sanitizer.bypassSecurityTrustUrl(header + fotoBase64);
   }
-
-  // Métodos para estadísticas
-  getTotalCompanies(): number {
-    return this.company.companies?.length || 0;
-  }
-
-  
-
-
-
 }

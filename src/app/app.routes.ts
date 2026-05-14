@@ -8,6 +8,8 @@ import { Home } from './features/home/home';
 import { RegisterAccidents } from './features/register-accidents/register-accidents';
 import { UserProfile } from './features/user-profile/user-profile';
 import { AccidentDetail } from './features/accident-detail/accident-detail';
+import { Companies } from './admin/companies/companies';
+import { RegisterCompany } from './admin/register-company/register-company';
 
 export const routes: Routes = [
     {
@@ -45,5 +47,13 @@ export const routes: Routes = [
     {
         path:'accident-detail',
         component: AccidentDetail
+    },
+    {
+        path: 'companies',
+        component: Companies
+    },
+    {
+        path: 'register-company',
+        component: RegisterCompany
     }
 ];

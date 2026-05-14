@@ -1,83 +1,178 @@
 <div class="register-container">
+  <div class="left-panel">
+    <div class="left-content">
+      <div class="hero-text">
+        <h2>Únete a<br><span>Gestion LMAD</span></h2>
+        <p>Regístrate y comienza a proteger lo que más importa con la mejor cobertura del mercado.</p>
+      </div>
+      <div class="benefits">
+        <div class="benefit">
+          <mat-icon>security</mat-icon>
+          <div>
+            <strong>Protección total</strong>
+            <span>Cobertura integral para tus bienes</span>
+          </div>
+        </div>
+        <div class="benefit">
+          <mat-icon>flash_on</mat-icon>
+          <div>
+            <strong>Respuesta ágil</strong>
+            <span>Atención inmediata 24/7</span>
+          </div>
+        </div>
+        <div class="benefit">
+          <mat-icon>trending_up</mat-icon>
+          <div>
+            <strong>Beneficios exclusivos</strong>
+            <span>Descuentos y promociones especiales</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="decorative-circles">
+      <div class="circle circle-1"></div>
+      <div class="circle circle-2"></div>
+      <div class="circle circle-3"></div>
+      <div class="circle circle-4"></div>
+    </div>
+  </div>
+
+  <div class="right-panel">
     <mat-card class="register-card">
-        <mat-card-header>
-            <mat-card-title>Crea tu Cuenta</mat-card-title>
-            <mat-card-subtitle>Ingresa tus datos personales para acceder al sistema</mat-card-subtitle>
-        </mat-card-header>
+      <div class="register-header">
+        <h1>Crear<br><span>Cuenta</span></h1>
+        <p class="subtitle">Completa tus datos para registrarte</p>
+      </div>
 
-        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form-content">
-            
-            <div class="form-row">
-                <mat-form-field appearance="outline">
-                    <mat-label>Nombre(s)</mat-label>
-                    <input matInput formControlName="nombre" placeholder="Ej. Juan">
-                    @if (nameFC?.hasError('required')) {
-                        <mat-error>El nombre es <strong>obligatorio</strong></mat-error>
-                    }
-                </mat-form-field>
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form-content">
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre(s)</mat-label>
+            <input matInput formControlName="nombre" placeholder="Ej. Juan">
+            <mat-icon matPrefix>person</mat-icon>
+            @if (nameFC?.hasError('required')) {
+              <mat-error>El nombre es <strong>obligatorio</strong></mat-error>
+            }
+          </mat-form-field>
 
-                <mat-form-field appearance="outline">
-                    <mat-label>Apellido(s)</mat-label>
-                    <input matInput formControlName="apellido" placeholder="Ej. Pérez">
-                    @if (lastNameFC?.hasError('required')) {
-                        <mat-error>El apellido es <strong>obligatorio</strong></mat-error>
-                    }
-                </mat-form-field>
-            </div>
+          <mat-form-field appearance="outline">
+            <mat-label>Apellido(s)</mat-label>
+            <input matInput formControlName="apellido" placeholder="Ej. Pérez">
+            <mat-icon matPrefix>people</mat-icon>
+            @if (lastNameFC?.hasError('required')) {
+              <mat-error>El apellido es <strong>obligatorio</strong></mat-error>
+            }
+          </mat-form-field>
+        </div>
 
-            <div class="form-row">
-                <mat-form-field appearance="outline">
-                    <mat-label>Alias</mat-label>
-                    <input matInput formControlName="alias" placeholder="Ej. juan12345">
-                    @if (aliasFC?.hasError('required')) {
-                        <mat-error>El alias es <strong>obligatorio</strong></mat-error>
-                    }
-                </mat-form-field>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Alias</mat-label>
+            <input matInput formControlName="alias" placeholder="Ej. juan12345">
+            <mat-icon matPrefix>badge</mat-icon>
+            @if (aliasFC?.hasError('required')) {
+              <mat-error>El alias es <strong>obligatorio</strong></mat-error>
+            }
+            @if (aliasFC?.hasError('minlength')) {
+              <mat-error>Mínimo 4 caracteres</mat-error>
+            }
+            @if (aliasFC?.hasError('maxlength')) {
+              <mat-error>Máximo 20 caracteres</mat-error>
+            }
+          </mat-form-field>
 
-                <mat-form-field appearance="outline">
-                    <mat-label>Fecha de Nacimiento</mat-label>
-                    <input matInput [matDatepicker]="picker" formControlName="fecha_nacimiento">
-                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                    <mat-hint>MM/DD/YYYY</mat-hint>
-                </mat-form-field>
-            </div>
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha de Nacimiento</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="fecha_nacimiento">
+            <mat-icon matPrefix>cake</mat-icon>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-hint>DD/MM/AAAA</mat-hint>
+            @if (registerForm.get('fecha_nacimiento')?.hasError('required')) {
+              <mat-error>La fecha es <strong>obligatoria</strong></mat-error>
+            }
+          </mat-form-field>
+        </div>
 
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Correo electrónico</mat-label>
-                <input type="email" matInput formControlName="correo_electronico" placeholder="Ej. pat@example.com">
-                @if (emailFC?.hasError('email') && !emailFC?.hasError('required')) {
-                    <mat-error>Ingrese un correo electrónico válido</mat-error>
-                }
-            </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Correo electrónico</mat-label>
+          <input type="email" matInput formControlName="correo_electronico" placeholder="ejemplo@correo.com">
+          <mat-icon matPrefix>email</mat-icon>
+          @if (emailFC?.hasError('email') && !emailFC?.hasError('required')) {
+            <mat-error>Ingrese una dirección de correo válida</mat-error>
+          }
+          @if (emailFC?.hasError('required')) {
+            <mat-error>El correo es <strong>obligatorio</strong></mat-error>
+          }
+        </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Contraseña</mat-label>
-                <input type="password" matInput formControlName="contrasena" placeholder="********">
-                @if (passwordFC?.hasError('minlength')) {
-                    <mat-error>Debe contener al menos 8 caracteres</mat-error>
-                }
-            </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input [type]="hidePassword ? 'password' : 'text'" matInput formControlName="contrasena" placeholder="********">
+          <mat-icon matPrefix>lock</mat-icon>
+          <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          @if (passwordFC?.hasError('minlength') && !passwordFC?.hasError('required')) {
+            <mat-error>Mínimo 8 caracteres</mat-error>
+          }
+          @if (passwordFC?.hasError('required')) {
+            <mat-error>La contraseña es <strong>obligatoria</strong></mat-error>
+          }
+        </mat-form-field>
 
-            <div class="gender-section">
-                <label>Género: </label>
-                <mat-radio-group formControlName="genero" class="gender-radiogroup">
-                    <mat-radio-button value="M">Masculino</mat-radio-button>
-                    <mat-radio-button value="F">Femenino</mat-radio-button>
-                    <mat-radio-button value="X">Otro</mat-radio-button>
-                </mat-radio-group>
-            </div>
+        <div class="gender-section">
+          <label>Género:</label>
+          <mat-radio-group formControlName="genero" class="gender-radiogroup">
+            <mat-radio-button value="M">
+              <mat-icon>male</mat-icon>
+              Masculino
+            </mat-radio-button>
+            <mat-radio-button value="F">
+              <mat-icon>female</mat-icon>
+              Femenino
+            </mat-radio-button>
+            <mat-radio-button value="X">
+              <mat-icon>transgender</mat-icon>
+              Otro
+            </mat-radio-button>
+          </mat-radio-group>
+          @if (registerForm.get('genero')?.hasError('required') && registerForm.get('genero')?.touched) {
+            <mat-error class="gender-error">Seleccione una opción</mat-error>
+          }
+        </div>
 
-            <div class="file-section">
-                <label>Foto de Perfil:</label>
-                <input type="file" (change)="onFileSelected($event)" accept=".jpg,.png" />
-            </div>
-
-            <button mat-raised-button color="primary" class="register-button" [disabled]="!registerForm.valid">
-                REGISTRAR CUENTA
+        <div class="file-section" (click)="fileInput.click()">
+          <input #fileInput type="file" (change)="onFileSelected($event)" accept=".jpg,.png,.jpeg" style="display: none">
+          <div class="upload-area">
+            <mat-icon>cloud_upload</mat-icon>
+            <span *ngIf="!selectedFilePreview">Subir foto de perfil</span>
+            <span *ngIf="selectedFilePreview">{{selectedFileName}}</span>
+            <small>JPG o PNG (máx. 5MB)</small>
+          </div>
+          <div *ngIf="selectedFilePreview" class="image-preview">
+            <img [src]="selectedFilePreview" alt="Vista previa">
+            <button type="button" class="remove-image" (click)="removeImage($event)">
+              <mat-icon>close</mat-icon>
             </button>
-            
-            <a href="login" class="login-link">¿Ya tienes una cuenta? Inicia sesión aquí</a>
-        </form>
+          </div>
+        </div>
+
+        <button mat-raised-button class="register-button" [disabled]="!registerForm.valid">
+          REGISTRAR CUENTA
+        </button>
+        
+        <div class="login-link-section">
+          <p>¿Ya tienes una cuenta?</p>
+          <a href="login" class="login-link">Inicia sesión aquí</a>
+        </div>
+      </form>
+
+      <div class="footer-note">
+        <mat-icon>verified</mat-icon>
+        <span>Tus datos están seguros con nosotros</span>
+      </div>
     </mat-card>
+  </div>
 </div>

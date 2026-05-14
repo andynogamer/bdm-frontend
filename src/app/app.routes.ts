@@ -11,6 +11,10 @@ import { AccidentDetail } from './features/accident-detail/accident-detail';
 
 export const routes: Routes = [
     {
+        path: '',
+        component: Login
+    },
+    {
         path:'login',
         component: Login
     },

@@ -1,59 +1,89 @@
 <app-header></app-header>
 
-<div class="main-content">
-    <header class="page-header">
-        <h1>Gestión de Siniestros</h1>
-        <mat-form-field appearance="outline" class="search-field">
-            <mat-label>Buscar por póliza o cliente</mat-label>
-            <mat-icon matPrefix>search</mat-icon>
-            <input type="search" matInput placeholder="Ej. Qualitas o Juan Pérez">
-        </mat-form-field>
-    </header>
-
-    <div class="accidents-grid">
-        @for(siniestro of dataSource; track siniestro.id){
-            <mat-card class="accident-card" appearance="raised">
-                <mat-card-header>
-                    <div mat-card-avatar class="insurance-icon">
-                        <mat-icon>directions_car</mat-icon>
-                    </div>
-                    <mat-card-title>{{siniestro.insurance}}</mat-card-title>
-                    <mat-card-subtitle>Póliza ID: {{siniestro.id}}</mat-card-subtitle>
-                </mat-card-header>
-
-                <mat-card-content>
-                    <div class="user-info">
-                        <mat-icon>person</mat-icon>
-                        <span>{{siniestro.userAffected}}</span>
-                    </div>
-                    <div class="date-info">
-                        <mat-icon>calendar_today</mat-icon>
-                        <span>{{siniestro.accidentDate | date:'mediumDate'}}</span>
-                    </div>
-
-                    <div class="status-container">
-                        @if(siniestro.estatus === 1){
-                            <mat-chip class="status-rejected">Rechazado</mat-chip>
-                        }@else if(siniestro.estatus === 2 || siniestro.estatus === 4){
-                            <mat-chip class="status-accepted">Aceptado</mat-chip>
-                        }@else if(siniestro.estatus === 3){
-                            <mat-chip class="status-deductible">Con Deducible</mat-chip>
-                        }@else if(siniestro.estatus === 6){
-                            <mat-chip class="status-total">Pérdida Total</mat-chip>
-                        }
-                    </div>
-                </mat-card-content>
-
-                <mat-card-actions align="end">
-                    <button mat-flat-button color="primary" [routerLink]="['/siniestro-detalle', siniestro.id]">
-                        VER DETALLES
-                    </button>
-                </mat-card-actions>
-            </mat-card>
-        }
+<div class="home-container">
+    <div class="left-panel">
+        <div class="left-content">
+            <div class="hero-text">
+                <h2>Gestión<br><span>LMAD</span></h2>
+                <p>Administra y da seguimiento a los siniestros registrados en el sistema.</p>
+            </div>
+            <div class="stats-info">
+                <div class="stat-item">
+                    <div class="stat-number">{{dataSource.length}}</div>
+                    <div class="stat-label">Total Siniestros</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">{{getAcceptedCount()}}</div>
+                    <div class="stat-label">Aceptados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">{{getPendingCount()}}</div>
+                    <div class="stat-label">En Proceso</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">{{getTotalLossCount()}}</div>
+                    <div class="stat-label">Pérdida Total</div>
+                </div>
+            </div>
+        </div>
+        <div class="decorative-circles">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+            <div class="circle circle-3"></div>
+            <div class="circle circle-4"></div>
+        </div>
     </div>
 
-    <button mat-fab class="fab-bottom-right" color="primary" routerLink="/register-accidents" title="Registrar nuevo siniestro">
-        <mat-icon>add</mat-icon>
-    </button>
+    <div class="right-panel">
+        <div class="search-header">
+            <h1>Gestión de Siniestros</h1>
+            <mat-form-field appearance="outline" class="search-field">
+                <mat-label>Buscar por póliza o cliente</mat-label>
+                <mat-icon matPrefix>search</mat-icon>
+                <input type="search" matInput placeholder="Ej. Qualitas o Juan Pérez">
+            </mat-form-field>
+        </div>
+
+        <div class="accidents-list">
+            @for(siniestro of dataSource; track siniestro.id){
+                <mat-card class="accident-card" appearance="outlined">
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div class="insurance-badge" [style.background]="getInsuranceColor(siniestro.insurance)">
+                                <mat-icon>description</mat-icon>
+                            </div>
+                            <div class="insurance-info">
+                                <h3>{{siniestro.insurance}}</h3>
+                                <p>Póliza ID: {{siniestro.id}}</p>
+                            </div>
+                            <div class="status-badge" [class]="getStatusClass(siniestro.estatus)">
+                                <mat-icon>{{getStatusIcon(siniestro.estatus)}}</mat-icon>
+                                <span>{{getStatusText(siniestro.estatus)}}</span>
+                            </div>
+                        </div>
+                        <div class="card-details">
+                            <div class="detail-item">
+                                <mat-icon>person</mat-icon>
+                                <span>{{siniestro.userAffected}}</span>
+                            </div>
+                            <div class="detail-item">
+                                <mat-icon>calendar_today</mat-icon>
+                                <span>{{siniestro.accidentDate | date:'dd/MM/yyyy'}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <mat-card-actions align="end">
+                        <button mat-stroked-button class="detail-button" [routerLink]="['/siniestro-detalle', siniestro.id]">
+                            VER DETALLES
+                            <mat-icon>arrow_forward</mat-icon>
+                        </button>
+                    </mat-card-actions>
+                </mat-card>
+            }
+        </div>
+
+        <button mat-fab class="fab-button" color="primary" routerLink="/register-accidents" title="Registrar nuevo siniestro">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
 </div>

@@ -1,12 +1,51 @@
 <app-header></app-header>
-<div class="profile-container">
-    <mat-card class="profile-card">
-        <mat-card-header>
-            <mat-card-title>Mi Perfil</mat-card-title>
-            <mat-card-subtitle>Gestiona tu información personal y foto de perfil</mat-card-subtitle>
-        </mat-card-header>
 
-        <form [formGroup]="profileForm" (ngSubmit)="onUpdate()" class="profile-layout">
+<div class="profile-container">
+    <div class="left-panel">
+        <div class="left-content">
+            <div class="hero-text">
+                <h2>Mi<br><span>Perfil</span></h2>
+                <p>Gestiona tu información personal y foto de perfil.</p>
+            </div>
+            <div class="profile-stats">
+                <div class="stat-card-mini">
+                    <mat-icon>badge</mat-icon>
+                    <div>
+                        <strong>Información Personal</strong>
+                        <span>Mantén tus datos actualizados</span>
+                    </div>
+                </div>
+                <div class="stat-card-mini">
+                    <mat-icon>lock</mat-icon>
+                    <div>
+                        <strong>Seguridad</strong>
+                        <span>Cambia tu contraseña cuando lo necesites</span>
+                    </div>
+                </div>
+                <div class="stat-card-mini">
+                    <mat-icon>photo_camera</mat-icon>
+                    <div>
+                        <strong>Foto de Perfil</strong>
+                        <span>Formato BLOB requerido</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="decorative-circles">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+            <div class="circle circle-3"></div>
+            <div class="circle circle-4"></div>
+        </div>
+    </div>
+
+    <div class="right-panel">
+        <div class="form-header">
+            <h1>Mi Perfil</h1>
+            <p class="subtitle">Gestiona tu información personal y foto de perfil</p>
+        </div>
+
+        <form [formGroup]="profileForm" (ngSubmit)="onUpdate()" class="profile-form">
             <div class="photo-section">
                 <div class="image-wrapper">
                     <img [src]="previewUrl" alt="Foto de perfil">
@@ -15,41 +54,69 @@
                         <input type="file" (change)="onFileSelected($event)" accept="image/*" hidden>
                     </label>
                 </div>
-                <p class="hint">Haz clic en el lápiz para cambiar tu foto (Formato BLOB requerido)</p> 
+                <p class="hint">Haz clic en el lápiz para cambiar tu foto</p>
             </div>
 
             <div class="fields-section">
                 <div class="form-row">
                     <mat-form-field appearance="outline">
                         <mat-label>Nombre(s)</mat-label>
+                        <mat-icon matPrefix>person</mat-icon>
                         <input matInput formControlName="name">
+                        @if (profileForm.get('name')?.hasError('required')) {
+                            <mat-error>El nombre es obligatorio</mat-error>
+                        }
                     </mat-form-field>
+
                     <mat-form-field appearance="outline">
                         <mat-label>Apellido(s)</mat-label>
+                        <mat-icon matPrefix>people</mat-icon>
                         <input matInput formControlName="lastName">
+                        @if (profileForm.get('lastName')?.hasError('required')) {
+                            <mat-error>El apellido es obligatorio</mat-error>
+                        }
                     </mat-form-field>
                 </div>
 
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Alias</mat-label>
+                    <mat-icon matPrefix>alternate_email</mat-icon>
                     <input matInput formControlName="alias">
+                    @if (profileForm.get('alias')?.hasError('required')) {
+                        <mat-error>El alias es obligatorio</mat-error>
+                    }
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Correo Electrónico</mat-label>
+                    <mat-icon matPrefix>email</mat-icon>
                     <input matInput formControlName="email">
+                    @if (profileForm.get('email')?.hasError('required')) {
+                        <mat-error>El correo es obligatorio</mat-error>
+                    }
+                    @if (profileForm.get('email')?.hasError('email')) {
+                        <mat-error>Ingrese un correo válido</mat-error>
+                    }
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Nueva Contraseña (dejar en blanco para no cambiar)</mat-label> 
-                    <input type="password" matInput formControlName="password">
-                    <mat-hint>Mínimo 8 caracteres si decides cambiarla</mat-hint>
+                    <mat-label>Nueva Contraseña</mat-label>
+                    <mat-icon matPrefix>lock</mat-icon>
+                    <input [type]="hidePassword ? 'password' : 'text'" matInput formControlName="password">
+                    <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+                        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-hint>Dejar en blanco para no cambiar (mínimo 8 caracteres si se cambia)</mat-hint>
+                    @if (profileForm.get('password')?.hasError('minlength')) {
+                        <mat-error>La contraseña debe tener al menos 8 caracteres</mat-error>
+                    }
                 </mat-form-field>
 
-                <button mat-raised-button color="primary" class="update-button" [disabled]="!profileForm.valid">
+                <button mat-raised-button class="update-button" type="submit" [disabled]="!profileForm.valid">
                     GUARDAR CAMBIOS
+                    <mat-icon>save</mat-icon>
                 </button>
             </div>
         </form>
-    </mat-card>
+    </div>
 </div>

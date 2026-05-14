@@ -1,86 +1,397 @@
 .profile-container {
     display: flex;
+    width: 100vw;
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+// ============ PANEL IZQUIERDO ============
+.left-panel {
+    flex: 0.6;
+    background: linear-gradient(135deg, #29353C 0%, #44576D 100%);
+    position: relative;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-    padding: 40px 20px;
-    background-color: #f4f7f6;
-    min-height: 90vh;
+    padding: 50px;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -20%;
+        right: -20%;
+        width: 300px;
+        height: 300px;
+        background: rgba(170, 199, 216, 0.1);
+        border-radius: 50%;
+        pointer-events: none;
+    }
 }
 
-.profile-card {
-    max-width: 800px;
-    width: 100%;
-    padding: 30px;
-    border-radius: 12px;
+.left-content {
+    position: relative;
+    z-index: 2;
+    color: white;
 }
 
-.profile-layout {
+.hero-text {
+    margin-bottom: 50px;
+
+    h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 20px;
+        letter-spacing: -0.5px;
+
+        span {
+            color: #AAC7D8;
+            border-bottom: 3px solid #DFEBF6;
+            display: inline-block;
+        }
+    }
+
+    p {
+        font-size: 0.9rem;
+        color: #DFEBF6;
+        line-height: 1.6;
+    }
+}
+
+.profile-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.stat-card-mini {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(170, 199, 216, 0.2);
+    
+    mat-icon {
+        color: #AAC7D8;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+    }
+    
+    div {
+        display: flex;
+        flex-direction: column;
+        
+        strong {
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+        
+        span {
+            font-size: 0.75rem;
+            color: #DFEBF6;
+        }
+    }
+}
+
+// Círculos decorativos
+.decorative-circles {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(170, 199, 216, 0.08);
+}
+
+.circle-1 {
+    width: 200px;
+    height: 200px;
+    bottom: -60px;
+    left: -60px;
+}
+
+.circle-2 {
+    width: 120px;
+    height: 120px;
+    top: 20%;
+    right: -40px;
+}
+
+.circle-3 {
+    width: 70px;
+    height: 70px;
+    bottom: 30%;
+    left: 15%;
+}
+
+.circle-4 {
+    width: 320px;
+    height: 320px;
+    top: -150px;
+    right: -120px;
+    background: rgba(170, 199, 216, 0.05);
+}
+
+// ============ PANEL DERECHO ============
+.right-panel {
+    flex: 1.4;
+    background: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.form-header {
+    margin-bottom: 30px;
+
+    h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #29353C;
+        margin: 0 0 8px 0;
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+        color: #768A96;
+        margin: 0;
+    }
+}
+
+.profile-form {
     display: flex;
     gap: 40px;
-    margin-top: 30px;
-    flex-wrap: wrap; // Responsivo para móviles
+    flex-wrap: wrap;
 }
 
+// Sección de foto
 .photo-section {
     flex: 1;
+    min-width: 220px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 200px;
-
-    .image-wrapper {
-        position: relative;
-        width: 180px;
-        height: 180px;
-        
-        img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid #3f51b5;
-        }
-
-        .upload-btn {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            background: #3f51b5;
-            color: white;
-            padding: 8px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-    }
-    
-    .hint { font-size: 11px; color: #666; margin-top: 15px; text-align: center; }
 }
 
+.image-wrapper {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    
+    img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #AAC7D8;
+        transition: all 0.3s ease;
+        
+        &:hover {
+            border-color: #44576D;
+        }
+    }
+
+    .upload-btn {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: #29353C;
+        color: white;
+        padding: 10px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        
+        &:hover {
+            background: #1a2329;
+            transform: scale(1.05);
+        }
+        
+        mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+        }
+    }
+}
+
+.hint {
+    font-size: 0.7rem;
+    color: #768A96;
+    margin-top: 15px;
+    text-align: center;
+}
+
+// Sección de campos
 .fields-section {
     flex: 2;
+    min-width: 280px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    min-width: 300px;
+    gap: 16px;
 }
 
 .form-row {
     display: flex;
-    gap: 16px;
+    gap: 20px;
     width: 100%;
-    mat-form-field { flex: 1; }
+    
+    mat-form-field {
+        flex: 1;
+    }
 }
 
-.full-width { width: 100%; }
+.full-width {
+    width: 100%;
+}
+
+// Estilos Material
+::ng-deep .mdc-text-field--outlined {
+    --mdc-outlined-text-field-container-shape: 12px;
+    
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__trailing {
+        border-color: #E6E6E6;
+    }
+}
+
+::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__trailing {
+        border-color: #AAC7D8;
+    }
+}
+
+::ng-deep .mdc-text-field--outlined.mdc-text-field--focused {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__trailing {
+        border-color: #44576D;
+        border-width: 2px;
+    }
+}
+
+::ng-deep .mat-mdc-form-field-label {
+    color: #768A96 !important;
+}
+
+::ng-deep .mat-mdc-form-field-prefix {
+    color: #768A96;
+    margin-right: 8px;
+}
+
+::ng-deep .mat-mdc-form-field-hint {
+    color: #AAC7D8;
+}
 
 .update-button {
-    height: 50px;
-    font-weight: bold;
+    height: 52px;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    background: #29353C !important;
+    color: white !important;
+    border-radius: 40px;
+    transition: all 0.3s ease;
     margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    &:hover:not([disabled]) {
+        background: #1a2329 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(41, 53, 60, 0.2);
+    }
+
+    &[disabled] {
+        background: #E6E6E6 !important;
+        color: #768A96 !important;
+    }
+    
+    mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+    }
 }
 
-@media (max-width: 600px) {
-    .profile-layout { flex-direction: column; align-items: center; }
-    .fields-section { width: 100%; }
+// ============ RESPONSIVE ============
+@media (max-width: 1024px) {
+    .left-panel {
+        padding: 35px;
+    }
+    
+    .hero-text h2 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        flex-direction: column;
+    }
+    
+    .left-panel {
+        flex: 0.25;
+        padding: 25px;
+    }
+    
+    .hero-text {
+        margin-bottom: 25px;
+        
+        h2 {
+            font-size: 1.5rem;
+        }
+        
+        p {
+            font-size: 0.8rem;
+        }
+    }
+    
+    .profile-stats {
+        display: none;
+    }
+    
+    .right-panel {
+        padding: 25px 20px;
+    }
+    
+    .form-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .profile-form {
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+    }
+    
+    .fields-section {
+        width: 100%;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .image-wrapper {
+        width: 140px;
+        height: 140px;
+    }
 }

@@ -12,10 +12,18 @@ export class User {
   }
 
   getUsers(){
-    return this.http.get<any[]>(this.API_URL);
+    return this.http.get<any[]>(this.API_URL, {
+      withCredentials: true
+    });
   }
   postUser(user: any){
-    return this.http.post<any>(this.API_URL, user);
+    return this.http.post<any>(this.API_URL, user, {
+      withCredentials: true
+    });
   }
-  
+  postLogin(user: any){
+    return this.http.post<any>(this.API_URL + '/login', user, {
+      withCredentials: true
+    })
+  }
 }

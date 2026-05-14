@@ -32,7 +32,7 @@ export class AccidentDetail implements OnInit {
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    //this.siniestro = SINIESTROS_DUMMY.find(s => s.id === id);
+    // this.siniestro = SINIESTROS_DUMMY.find(s => s.id === id);
     this.siniestro = SINIESTROS_DUMMY[0];
     if (this.siniestro?.multimedia) {
       this.images = this.siniestro.multimedia.map(blob => 
@@ -44,5 +44,22 @@ export class AccidentDetail implements OnInit {
   getStatusName(id: number): string {
     const status: any = { 1: 'Rechazado', 2: 'Aceptado', 3: 'Con Deducible', 6: 'Pérdida Total' };
     return status[id] || 'Pendiente';
+  }
+
+  getStatusIcon(id: number): string {
+    const icons: any = { 1: 'close', 2: 'check_circle', 3: 'attach_money', 6: 'warning' };
+    return icons[id] || 'pending';
+  }
+
+  getStatusClass(id: number): string {
+    if (id === 1) return 'status-rejected';
+    if (id === 2) return 'status-accepted';
+    if (id === 3) return 'status-deductible';
+    if (id === 6) return 'status-total';
+    return '';
+  }
+
+  openImage(img: SafeUrl) {
+    window.open(img as string, '_blank');
   }
 }

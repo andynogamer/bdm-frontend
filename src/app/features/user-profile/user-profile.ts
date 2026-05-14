@@ -24,11 +24,11 @@ export class UserProfile implements OnInit {
   profileForm!: FormGroup;
   previewUrl: SafeUrl | string = 'assets/default-user.png';
   selectedFile: File | null = null;
+  hidePassword = true;
 
   constructor(private sanitizer: DomSanitizer, private snackBar: MatSnackBar) {}
 
   ngOnInit() {
-    // 1. Cargamos datos de prueba (simulando que es el usuario logueado) 
     const user = USUARIOS_DUMMY[0]; 
     
     this.profileForm = new FormGroup({
@@ -36,11 +36,10 @@ export class UserProfile implements OnInit {
       lastName: new FormControl(user.lastName, [Validators.required]),
       alias: new FormControl(user.alias, [Validators.required]),
       email: new FormControl(user.correo, [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.minLength(8)]), // Opcional para cambio
+      password: new FormControl('', [Validators.minLength(8)]),
       imageControl: new FormControl(null)
     });
 
-    // 2. Procesamos el BLOB inicial para mostrarlo 
     if (user.photo instanceof Blob && user.photo.size > 0) {
       this.previewUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(user.photo));
     }
@@ -51,15 +50,13 @@ export class UserProfile implements OnInit {
     if (file) {
       this.selectedFile = file;
       this.previewUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(file));
-      // Actualizamos el control para que el formulario sea válido si se requiere 
       this.profileForm.patchValue({ imageControl: file });
     }
   }
 
   onUpdate() {
     if (this.profileForm.valid) {
-      console.log('Actualizando datos en PHP...', this.profileForm.value);
-      // Requisito: Mostrar avisos de éxito 
+      console.log('Actualizando datos...', this.profileForm.value);
       this.snackBar.open('Información actualizada correctamente', 'Cerrar', { duration: 3000 });
     }
   }

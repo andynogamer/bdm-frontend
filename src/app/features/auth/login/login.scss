@@ -1,44 +1,375 @@
 .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    background-color: #f4f7f6; 
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+// ============ PANEL IZQUIERDO ============
+.left-panel {
+  flex: 1.2;
+  background: linear-gradient(135deg, #29353C 0%, #44576D 100%);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -20%;
+    width: 300px;
+    height: 300px;
+    background: rgba(170, 199, 216, 0.1);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+}
+
+.left-content {
+  position: relative;
+  z-index: 2;
+  color: white;
+}
+
+.logo {
+  width: 180px;
+  margin-bottom: 60px;
+  filter: brightness(0) invert(1);
+}
+
+.hero-text {
+  margin-bottom: 50px;
+
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #AAC7D8;
+    line-height: 1.6;
+  }
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  
+  mat-icon {
+    color: #AAC7D8;
+    font-size: 24px;
+  }
+  
+  span {
+    font-size: 0.95rem;
+    color: #DFEBF6;
+  }
+}
+
+// Círculos decorativos
+.decorative-circles {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(170, 199, 216, 0.08);
+}
+
+.circle-1 {
+  width: 250px;
+  height: 250px;
+  bottom: -80px;
+  left: -80px;
+}
+
+.circle-2 {
+  width: 150px;
+  height: 150px;
+  top: 20%;
+  right: -50px;
+}
+
+.circle-3 {
+  width: 80px;
+  height: 80px;
+  bottom: 30%;
+  left: 20%;
+}
+
+.circle-4 {
+  width: 400px;
+  height: 400px;
+  top: -200px;
+  right: -150px;
+  background: rgba(170, 199, 216, 0.05);
+}
+
+// ============ PANEL DERECHO ============
+.right-panel {
+  flex: 1;
+  background: #FFFFFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  overflow-y: auto;
 }
 
 .login-card {
-    max-width: 450px; 
-    width: 90%;
-    padding: 30px;
-    border-radius: 12px;
+  width: 100%;
+  max-width: 450px;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.login-header {
+  margin-bottom: 40px;
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #29353C;
+    margin: 0 0 10px 0;
+    line-height: 1.2;
+
+    span {
+      color: #44576D;
+      border-bottom: 3px solid #AAC7D8;
+      display: inline-block;
+    }
+  }
+
+  .subtitle {
+    color: #768A96;
+    font-size: 0.9rem;
+    margin-top: 10px;
+  }
 }
 
 .form-content {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .full-width {
-    width: 100%;
+  width: 100%;
+}
+
+// Estilos Material Design personalizados
+::ng-deep .mdc-text-field--outlined {
+  --mdc-outlined-text-field-container-shape: 12px;
+  
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__trailing {
+    border-color: #E6E6E6;
+  }
+}
+
+::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover {
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__trailing {
+    border-color: #AAC7D8;
+  }
+}
+
+::ng-deep .mdc-text-field--outlined.mdc-text-field--focused {
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__trailing {
+    border-color: #44576D;
+    border-width: 2px;
+  }
+}
+
+::ng-deep .mat-mdc-form-field-label {
+  color: #768A96 !important;
+}
+
+::ng-deep .mdc-text-field--outlined .mdc-floating-label--float-above {
+  color: #44576D !important;
+}
+
+.forgot-password {
+  text-align: right;
+  margin: -5px 0 5px;
+
+  a {
+    color: #768A96;
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #29353C;
+      text-decoration: underline;
+    }
+  }
 }
 
 .login-button {
-    height: 50px;
-    font-weight: bold;
-    margin-top: 10px;
+  height: 52px;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  background: #29353C !important;
+  color: white !important;
+  border-radius: 40px;
+  transition: all 0.3s ease;
+
+  &:hover:not([disabled]) {
+    background: #1a2329 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(41, 53, 60, 0.2);
+  }
+
+  &[disabled] {
+    background: #E6E6E6 !important;
+    color: #768A96 !important;
+  }
 }
 
-.register-link {
-    text-align: center;
-    margin-top: 15px;
+.register-section {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #E6E6E6;
+
+  p {
+    color: #768A96;
+    font-size: 0.85rem;
+    margin: 0 0 8px 0;
+  }
+
+  .register-link {
+    color: #44576D;
     text-decoration: none;
-    color: #3f51b5; // Color del tema
-    font-size: 14px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: color 0.2s;
 
     &:hover {
-        text-decoration: underline;
+      color: #29353C;
+      text-decoration: underline;
     }
+  }
+}
+
+.footer-info {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.contact-support {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: #768A96;
+  margin-bottom: 15px;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #AAC7D8;
+  }
+}
+
+.legal-links {
+  font-size: 0.7rem;
+  margin-bottom: 10px;
+
+  a {
+    color: #768A96;
+    text-decoration: none;
+
+    &:hover {
+      color: #29353C;
+      text-decoration: underline;
+    }
+  }
+
+  .separator {
+    margin: 0 10px;
+    color: #E6E6E6;
+  }
+}
+
+.copyright {
+  font-size: 0.7rem;
+  color: #768A96;
+}
+
+// ============ RESPONSIVE ============
+@media (max-width: 1024px) {
+  .left-panel {
+    padding: 40px;
+  }
+
+  .hero-text h2 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+  }
+
+  .left-panel {
+    flex: 0.4;
+    padding: 30px;
+  }
+
+  .logo {
+    width: 120px;
+    margin-bottom: 30px;
+  }
+
+  .hero-text {
+    margin-bottom: 30px;
+    
+    h2 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .features {
+    display: none;
+  }
+
+  .right-panel {
+    flex: 0.6;
+    padding: 30px 20px;
+  }
+
+  .login-header h1 {
+    font-size: 2rem;
+  }
 }

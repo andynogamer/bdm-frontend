@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {MatCardModule} from '@angular/material/card';
-import {MatSelectModule} from '@angular/material/select';
+import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
 import { Usuario } from '../../core/models/usuario.model';
 import { USUARIOS_DUMMY } from '../../core/models/dummyModels/usuarios.mocks';
 import { Header } from '../../shared/header/header';
@@ -24,10 +24,12 @@ import { User } from '../../services/user';
 export class Users implements OnInit {
 
   constructor(public user: User, private sanitizer: DomSanitizer) {}
+  
   ngOnInit(): void {
     this.getUsers();
   }
-  getUsers(){
+  
+  getUsers() {
     this.user.getUsers().subscribe({
       next: (data) => {
         this.user.users = data;
@@ -35,27 +37,34 @@ export class Users implements OnInit {
       error: (e) => {
         console.log(e);
       }
-    })
+    });
   }
+  
   typeUserSelected = "option0";
+  
   getRoleName(rol: number): string {
     const roles: { [key: number]: string } = { 2: 'Administrador', 1: 'Ajustador', 0: 'Asegurado' };
     return roles[rol] || 'Usuario';
   }
 
-  
   getImageUrl(fotoBase64: string | null): SafeUrl {
-    
     if (!fotoBase64) {
       return 'assets/default-user.png';
     }
-
-    
     const header = 'data:image/png;base64,'; 
     return this.sanitizer.bypassSecurityTrustUrl(header + fotoBase64);
   }
 
-  
+  // Métodos para estadísticas
+  getTotalUsers(): number {
+    return this.user.users?.length || 0;
+  }
+
+  getUsersByType(tipo: number): number {
+    return this.user.users?.filter(u => u.tipo_usuario === tipo).length || 0;
+  }
+
+
   /*
   typeUserSelected = "option0";
   dataSource = USUARIOS_DUMMY;
@@ -75,4 +84,5 @@ export class Users implements OnInit {
     return roles[rol] || 'Usuario';
   }
     */
+
 }

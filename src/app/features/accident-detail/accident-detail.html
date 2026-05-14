@@ -1,72 +1,167 @@
 <app-header></app-header>
 
 <div class="detail-container" *ngIf="siniestro">
-    <mat-card class="main-card">
-        <mat-card-header>
-            <mat-icon mat-card-avatar>assignment</mat-icon>
-            <mat-card-title>Siniestro #{{siniestro.id}} - {{siniestro.insurance}}</mat-card-title>
-            <mat-card-subtitle>Póliza: {{siniestro.policyNumber}}</mat-card-subtitle>
-            <span class="spacer"></span>
-            <mat-chip [ngClass]="'status-' + siniestro.estatus">
-                {{ getStatusName(siniestro.estatus) }}
-            </mat-chip>
-        </mat-card-header>
+    <div class="left-panel">
+        <div class="left-content">
+            <div class="hero-text">
+                <h2>Detalle del<br><span>Siniestro</span></h2>
+                <p>Información completa y seguimiento del incidente reportado.</p>
+            </div>
+            <div class="info-cards">
+                <div class="info-card">
+                    <mat-icon>policy</mat-icon>
+                    <div>
+                        <strong>Número de Siniestro</strong>
+                        <span>#{{siniestro.id}}</span>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <mat-icon>business</mat-icon>
+                    <div>
+                        <strong>Aseguradora</strong>
+                        <span>{{siniestro.insurance}}</span>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <mat-icon>badge</mat-icon>
+                    <div>
+                        <strong>Número de Póliza</strong>
+                        <span>{{siniestro.policyNumber}}</span>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <mat-icon>calendar_month</mat-icon>
+                    <div>
+                        <strong>Fecha de Registro</strong>
+                        <span>{{siniestro.accidentDate | date:'dd/MM/yyyy'}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="decorative-circles">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+            <div class="circle circle-3"></div>
+            <div class="circle circle-4"></div>
+        </div>
+    </div>
 
-        <mat-tab-group dynamicHeight>
+    <div class="right-panel">
+        <div class="detail-header">
+            <div class="title-section">
+                <h1>Siniestro <span>#{{siniestro.id}}</span></h1>
+                <p class="subtitle">{{siniestro.insurance}} · Póliza: {{siniestro.policyNumber}}</p>
+            </div>
+            <mat-chip [ngClass]="'status-' + siniestro.estatus" class="status-chip">
+                <mat-icon>{{getStatusIcon(siniestro.estatus)}}</mat-icon>
+                <span>{{ getStatusName(siniestro.estatus) }}</span>
+            </mat-chip>
+        </div>
+
+        <mat-tab-group dynamicHeight class="custom-tabs">
             <mat-tab label="Detalles Técnicos">
-                <div class="tab-content grid-details">
-                    <div class="info-group">
-                        <label>Asegurado:</label>
-                        <p>{{siniestro.userAffected}}</p>
-                    </div>
-                    <div class="info-group">
-                        <label>Datos de la Unidad:</label>
-                        <p>{{siniestro.unitData}}</p>
-                    </div>
-                    <div class="info-group">
-                        <label>Ubicación:</label>
-                        <p>{{siniestro.location}}</p>
-                    </div>
-                    <div class="info-group">
-                        <label>Fecha del Incidente:</label>
-                        <p>{{siniestro.accidentDate | date:'medium'}}</p>
-                    </div>
-                    <div class="info-group full-width">
-                        <label>Descripción del Suceso:</label>
-                        <p>{{siniestro.description}}</p>
+                <div class="tab-content">
+                    <div class="details-grid">
+                        <div class="detail-group">
+                            <label>Asegurado</label>
+                            <p>{{siniestro.userAffected}}</p>
+                        </div>
+                        <div class="detail-group">
+                            <label>Datos de la Unidad</label>
+                            <p>{{siniestro.unitData}}</p>
+                        </div>
+                        <div class="detail-group">
+                            <label>Ubicación</label>
+                            <p>{{siniestro.location}}</p>
+                        </div>
+                        <div class="detail-group">
+                            <label>Fecha del Incidente</label>
+                            <p>{{siniestro.accidentDate | date:'dd/MM/yyyy - hh:mm a'}}</p>
+                        </div>
+                        <div class="detail-group full-width">
+                            <label>Descripción del Suceso</label>
+                            <p class="description-text">{{siniestro.description}}</p>
+                        </div>
                     </div>
                 </div>
             </mat-tab>
 
             <mat-tab label="Multimedia">
-                <div class="tab-content gallery">
-                    <div class="image-grid">
-                        <img *ngFor="let img of images" [src]="img" class="evidence-img">
-                        <p *ngIf="images.length === 0">No hay evidencia cargada.</p>
+                <div class="tab-content">
+                    <div class="gallery-section">
+                        <div class="gallery-header">
+                            <mat-icon>photo_library</mat-icon>
+                            <span>Evidencia del Siniestro</span>
+                        </div>
+                        <div class="image-grid">
+                            <div class="image-card" *ngFor="let img of images; let i = index">
+                                <img [src]="img" class="evidence-img" (click)="openImage(img)">
+                                <div class="image-overlay">
+                                    <mat-icon>zoom_in</mat-icon>
+                                </div>
+                            </div>
+                            <div class="empty-gallery" *ngIf="images.length === 0">
+                                <mat-icon>insert_photo</mat-icon>
+                                <p>No hay evidencia cargada para este siniestro</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </mat-tab>
 
             <mat-tab label="Seguimiento">
-                <div class="tab-content chat-container">
-                    <div class="chat-history">
-                        <div class="message incoming">
-                            <strong>Ajustador:</strong> Registrando daños iniciales.
+                <div class="tab-content">
+                    <div class="chat-container">
+                        <div class="chat-history">
+                            <div class="message incoming">
+                                <div class="message-avatar">
+                                    <mat-icon>support_agent</mat-icon>
+                                </div>
+                                <div class="message-content">
+                                    <div class="message-header">
+                                        <strong>Ajustador</strong>
+                                        <span>Hace 2 días</span>
+                                    </div>
+                                    <p>Registrando daños iniciales del vehículo. Se ha programado una inspección para el día de mañana.</p>
+                                </div>
+                            </div>
+                            <div class="message outgoing">
+                                <div class="message-content">
+                                    <div class="message-header">
+                                        <strong>Asegurado</strong>
+                                        <span>Hace 1 día</span>
+                                    </div>
+                                    <p>¿Cuándo se autoriza la reparación? Necesito una respuesta pronto.</p>
+                                </div>
+                                <div class="message-avatar">
+                                    <mat-icon>person</mat-icon>
+                                </div>
+                            </div>
+                            <div class="message incoming">
+                                <div class="message-avatar">
+                                    <mat-icon>support_agent</mat-icon>
+                                </div>
+                                <div class="message-content">
+                                    <div class="message-header">
+                                        <strong>Ajustador</strong>
+                                        <span>Hace 8 horas</span>
+                                    </div>
+                                    <p>La autorización está en proceso. En las próximas 48 horas recibirá respuesta.</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="message outgoing">
-                            <strong>Yo (Asegurado):</strong> ¿Cuándo se autoriza la reparación?
+                        <div class="chat-input">
+                            <mat-form-field appearance="outline" class="input-field">
+                                <mat-label>Escribe un comentario...</mat-label>
+                                <input matInput placeholder="Agrega un seguimiento al siniestro">
+                                <button mat-icon-button matSuffix color="primary" class="send-button">
+                                    <mat-icon>send</mat-icon>
+                                </button>
+                            </mat-form-field>
                         </div>
-                    </div>
-                    <div class="chat-input">
-                        <mat-form-field appearance="outline">
-                            <input matInput placeholder="Escribe un comentario...">
-                            <button mat-icon-button matSuffix color="primary">
-                                <mat-icon>send</mat-icon>
-                            </button>
-                        </mat-form-field>
                     </div>
                 </div>
             </mat-tab>
         </mat-tab-group>
-    </mat-card>
+    </div>
 </div>

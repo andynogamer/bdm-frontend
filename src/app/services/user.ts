@@ -11,6 +11,12 @@ export class User {
     this.users = [];
   }
 
+  getProfile(){
+    return this.http.get<any>(this.API_URL + '/profile', {
+      withCredentials: true
+    });
+  }
+
   getUsers(){
     return this.http.get<any[]>(this.API_URL, {
       withCredentials: true

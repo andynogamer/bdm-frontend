@@ -62,8 +62,8 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Nombre(s)</mat-label>
                         <mat-icon matPrefix>person</mat-icon>
-                        <input matInput formControlName="name">
-                        @if (profileForm.get('name')?.hasError('required')) {
+                        <input matInput formControlName="nombre">
+                        @if (profileForm.get('nombre')?.hasError('required')) {
                             <mat-error>El nombre es obligatorio</mat-error>
                         }
                     </mat-form-field>
@@ -71,8 +71,8 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Apellido(s)</mat-label>
                         <mat-icon matPrefix>people</mat-icon>
-                        <input matInput formControlName="lastName">
-                        @if (profileForm.get('lastName')?.hasError('required')) {
+                        <input matInput formControlName="apellido">
+                        @if (profileForm.get('apellido')?.hasError('required')) {
                             <mat-error>El apellido es obligatorio</mat-error>
                         }
                     </mat-form-field>
@@ -90,27 +90,29 @@
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Correo Electrónico</mat-label>
                     <mat-icon matPrefix>email</mat-icon>
-                    <input matInput formControlName="email">
-                    @if (profileForm.get('email')?.hasError('required')) {
+                    <input matInput formControlName="correo_electronico">
+                    @if (profileForm.get('correo_electronico')?.hasError('required')) {
                         <mat-error>El correo es obligatorio</mat-error>
                     }
-                    @if (profileForm.get('email')?.hasError('email')) {
+                    @if (profileForm.get('correo_electronico')?.hasError('email')) {
                         <mat-error>Ingrese un correo válido</mat-error>
                     }
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Nueva Contraseña</mat-label>
+                    <mat-label>Nueva contraseña</mat-label>
                     <mat-icon matPrefix>lock</mat-icon>
-                    <input [type]="hidePassword ? 'password' : 'text'" matInput formControlName="password">
+                    <input [type]="hidePassword ? 'password' : 'text'" matInput formControlName="contrasena">
                     <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
                         <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </button>
                     <mat-hint>Dejar en blanco para no cambiar (mínimo 8 caracteres si se cambia)</mat-hint>
-                    @if (profileForm.get('password')?.hasError('minlength')) {
+                    @if (profileForm.get('contrasena')?.hasError('minlength')) {
                         <mat-error>La contraseña debe tener al menos 8 caracteres</mat-error>
                     }
                 </mat-form-field>
+
+                
 
                 <button mat-raised-button class="update-button" type="submit" [disabled]="!profileForm.valid">
                     GUARDAR CAMBIOS

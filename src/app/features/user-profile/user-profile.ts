@@ -9,55 +9,108 @@ import { MatInputModule } from '@angular/material/input';
 import { Header } from '../../shared/header/header';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { USUARIOS_DUMMY } from '../../core/models/dummyModels/usuarios.mocks';
+import { User } from '../../services/user';
 
 @Component({
   selector: 'app-user-profile',
   imports: [
-    CommonModule, ReactiveFormsModule, MatCardModule, MatFormFieldModule, 
-    MatInputModule, MatButtonModule, MatIconModule, MatSnackBarModule, Header
+    CommonModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSnackBarModule,
+    Header
   ],
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.scss',
 })
 export class UserProfile implements OnInit {
+
   profileForm!: FormGroup;
-  previewUrl: SafeUrl | string = 'assets/default-user.png';
+  previewUrl: SafeUrl | string = 'default-user.png';
   selectedFile: File | null = null;
   hidePassword = true;
 
-  constructor(private sanitizer: DomSanitizer, private snackBar: MatSnackBar) {}
+  constructor(
+    private sanitizer: DomSanitizer,
+    private snackBar: MatSnackBar,
+    public userService: User
+  ) {}
 
   ngOnInit() {
-    const user = USUARIOS_DUMMY[0]; 
-    
+
+    // Inicializas vacío
     this.profileForm = new FormGroup({
-      name: new FormControl(user.name, [Validators.required]),
-      lastName: new FormControl(user.lastName, [Validators.required]),
-      alias: new FormControl(user.alias, [Validators.required]),
-      email: new FormControl(user.correo, [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.minLength(8)]),
-      imageControl: new FormControl(null)
+      nombre: new FormControl('', [Validators.required]),
+      apellido: new FormControl('', [Validators.required]),
+      alias: new FormControl('', [Validators.required]),
+      correo_electronico: new FormControl('', [Validators.required, Validators.email]),
+      contrasena: new FormControl('', [Validators.minLength(8)]),
+      foto: new FormControl(null)
     });
 
-    if (user.photo instanceof Blob && user.photo.size > 0) {
-      this.previewUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(user.photo));
-    }
+    // Llamas al backend
+    this.userService.getProfile().subscribe({
+      next: (user) => {
+
+        console.log(user);
+
+        // Llenas el formulario
+        this.profileForm.patchValue({
+          nombre: user.nombre,
+          apellido: user.apellido,
+          alias: user.alias,
+          correo_electronico: user.correo_electronico
+        });
+
+        // Imagen de perfil
+        if (user.foto) {
+          this.previewUrl = user.foto;
+        }
+      },
+
+      error: (err) => {
+        console.error(err);
+
+        this.snackBar.open(
+          'Error al cargar el perfil',
+          'Cerrar',
+          { duration: 3000 }
+        );
+      }
+    });
   }
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
+
     if (file) {
       this.selectedFile = file;
-      this.previewUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(file));
-      this.profileForm.patchValue({ imageControl: file });
+
+      this.previewUrl = this.sanitizer.bypassSecurityTrustUrl(
+        URL.createObjectURL(file)
+      );
+
+      this.profileForm.patchValue({
+        foto: file
+      });
     }
   }
 
   onUpdate() {
+
     if (this.profileForm.valid) {
-      console.log('Actualizando datos...', this.profileForm.value);
-      this.snackBar.open('Información actualizada correctamente', 'Cerrar', { duration: 3000 });
+
+      console.log(this.profileForm.value);
+
+      this.snackBar.open(
+        'Información actualizada correctamente',
+        'Cerrar',
+        { duration: 3000 }
+      );
     }
   }
 }

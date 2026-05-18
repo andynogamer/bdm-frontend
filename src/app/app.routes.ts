@@ -10,6 +10,8 @@ import { UserProfile } from './features/user-profile/user-profile';
 import { AccidentDetail } from './features/accident-detail/accident-detail';
 import { Companies } from './admin/companies/companies';
 import { RegisterCompany } from './admin/register-company/register-company';
+import { Policies } from './features/policies/policies';
+import { RegisterPolicy } from './features/register-policy/register-policy';
 
 export const routes: Routes = [
     {
@@ -55,5 +57,13 @@ export const routes: Routes = [
     {
         path: 'register-company',
         component: RegisterCompany
+    },
+    {
+        path: 'policies',
+        component: Policies
+    },
+    {
+        path: 'register-policy',
+        component: RegisterPolicy
     }
 ];

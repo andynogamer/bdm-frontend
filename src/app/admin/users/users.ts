@@ -73,7 +73,7 @@ export class Users implements OnInit {
       return 'default-user.png';
     }
     const header = 'data:image/png;base64,'; 
-    return this.sanitizer.bypassSecurityTrustUrl(header + fotoBase64);
+    return this.sanitizer.bypassSecurityTrustUrl(fotoBase64);
   }
 
   // ¡CORREGIDO! Ahora busca en listaUsers y no en el servicio

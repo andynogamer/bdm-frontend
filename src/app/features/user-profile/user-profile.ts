@@ -78,7 +78,8 @@ export class UserProfile implements OnInit {
           alias: user.alias,
           fecha_nacimiento: user.fecha_nacimiento,
           genero: user.genero,
-          correo_electronico: user.correo_electronico
+          correo_electronico: user.correo_electronico,
+          foto: user.foto
         });
 
         // Imagen de perfil
@@ -100,27 +101,39 @@ export class UserProfile implements OnInit {
   }
 
   onFileSelected(event: any) {
+
     const file = event.target.files[0];
 
-    if (file) {
-      this.selectedFile = file;
+    if (!file) return;
 
-      this.previewUrl = this.sanitizer.bypassSecurityTrustUrl(
-        URL.createObjectURL(file)
-      );
+    this.selectedFile = file;
 
+    const reader = new FileReader();
+
+    reader.onload = () => {
+
+      const base64 = reader.result as string;
+
+      // Preview
+      this.previewUrl = base64;
+
+      // Guardar base64 en el form
       this.profileForm.patchValue({
-        foto: file
+        foto: base64
       });
-    }
+    };
+
+    reader.readAsDataURL(file);
   }
 
   onUpdate() {
 
     if (this.profileForm.valid) {
+      console.log(this.profileForm.value)
 
       this.userService.updateUser(this.profileForm.value).subscribe({
         next: (data) =>{
+
           
           this.snackBar.open(
             'Información actualizada correctamente',

@@ -72,7 +72,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Nombre(s)</mat-label>
                     <mat-icon matPrefix>person</mat-icon>
-                    <input matInput formControlName="nameFormControl" placeholder="Ej. Juan">
+                    <input matInput formControlName="nombre" placeholder="Ej. Juan">
                     @if (nameFC?.hasError('required')) {
                         <mat-error>El nombre es <strong>obligatorio</strong></mat-error>
                     }
@@ -81,7 +81,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Apellido(s)</mat-label>
                     <mat-icon matPrefix>people</mat-icon>
-                    <input matInput formControlName="lastNameFormControl" placeholder="Ej. Pérez">
+                    <input matInput formControlName="apellido" placeholder="Ej. Pérez">
                     @if (lastNameFC?.hasError('required')) {
                         <mat-error>El apellido es <strong>obligatorio</strong></mat-error>
                     }
@@ -92,7 +92,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Alias</mat-label>
                     <mat-icon matPrefix>badge</mat-icon>
-                    <input matInput formControlName="aliasFormControl" placeholder="Ej. juan123">
+                    <input matInput formControlName="alias" placeholder="Ej. juan123">
                     @if (aliasFC?.hasError('required')) {
                         <mat-error>El alias es <strong>obligatorio</strong></mat-error>
                     }
@@ -104,7 +104,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Fecha de Nacimiento</mat-label>
                     <mat-icon matPrefix>cake</mat-icon>
-                    <input matInput [matDatepicker]="picker" formControlName="birthDateFormControl">
+                    <input matInput [matDatepicker]="picker" formControlName="fecha_nacimiento">
                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                     <mat-hint>Debe ser mayor de 18 años</mat-hint>
@@ -114,7 +114,7 @@
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Correo Electrónico</mat-label>
                 <mat-icon matPrefix>email</mat-icon>
-                <input type="email" matInput formControlName="emailFormControl" placeholder="pat@example.com">
+                <input type="email" matInput formControlName="correo_electronico" placeholder="pat@example.com">
                 @if (emailFC?.hasError('required')) {
                     <mat-error>El correo es <strong>obligatorio</strong></mat-error>
                 }
@@ -126,7 +126,7 @@
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Contraseña</mat-label>
                 <mat-icon matPrefix>lock</mat-icon>
-                <input [type]="hidePassword ? 'password' : 'text'" matInput formControlName="passwordFormControl">
+                <input [type]="hidePassword ? 'password' : 'text'" matInput formControlName="contrasena">
                 <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
                     <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
@@ -143,7 +143,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Tipo de Usuario</mat-label>
                     <mat-icon matPrefix>work</mat-icon>
-                    <mat-select formControlName="userTypeFormControl">
+                    <mat-select formControlName="tipo_usuario">
                         <mat-option value="2">Administrador</mat-option>
                         <mat-option value="1">Ajustador</mat-option>
                         <mat-option value="0">Asegurado</mat-option>
@@ -151,17 +151,24 @@
                 </mat-form-field>
 
                 <div class="gender-section">
-                    <label>Género</label>
-                    <mat-radio-group formControlName="genderFormControl" class="gender-group">
-                        <mat-radio-button value="male">
-                            <mat-icon>male</mat-icon>
-                            Masculino
-                        </mat-radio-button>
-                        <mat-radio-button value="female">
-                            <mat-icon>female</mat-icon>
-                            Femenino
-                        </mat-radio-button>
-                    </mat-radio-group>
+                <label>Género:</label>
+                <mat-radio-group formControlName="genero" class="gender-radiogroup">
+                    <mat-radio-button value="M">
+                    <mat-icon>male</mat-icon>
+                    Masculino
+                    </mat-radio-button>
+                    <mat-radio-button value="F">
+                    <mat-icon>female</mat-icon>
+                    Femenino
+                    </mat-radio-button>
+                    <mat-radio-button value="X">
+                    <mat-icon>transgender</mat-icon>
+                    Otro
+                    </mat-radio-button>
+                </mat-radio-group>
+                @if (registerForm.get('genero')?.hasError('required') && registerForm.get('genero')?.touched) {
+                    <mat-error class="gender-error">Seleccione una opción</mat-error>
+                }
                 </div>
             </div>
 

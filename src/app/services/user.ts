@@ -29,6 +29,12 @@ export class User {
     });
   }
 
+  postEmployee(user: any){
+    return this.http.post<any>(this.API_URL + '/admin-register', user, {
+      withCredentials: true
+    });
+  }
+
   postLogin(user: any){
     return this.http.post<any>(this.API_URL + '/login', user, {
       withCredentials: true

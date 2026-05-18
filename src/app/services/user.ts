@@ -24,7 +24,7 @@ export class User {
   }
   
   postUser(user: any){
-    return this.http.post<any>(this.API_URL, user, {
+    return this.http.post<any>(this.API_URL + '/register', user, {
       withCredentials: true
     });
   }

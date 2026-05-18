@@ -8,6 +8,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { User } from '../../../services/user';
 
@@ -21,6 +22,7 @@ import { User } from '../../../services/user';
     MatInputModule, 
     MatRadioModule, 
     MatDatepickerModule,
+    MatSnackBarModule,
     MatButtonModule, 
     MatCardModule,
     MatIconModule
@@ -96,17 +98,30 @@ export class RegisterUsers {
     });
   }
 
-  constructor(public user: User) {}
+  constructor(
+    public user: User,
+    private snackBar: MatSnackBar,
+  ) {}
 
   onSubmit() {
     if (this.registerForm.valid) {
       //console.log(this.registerForm.value);
       this.user.postUser(this.registerForm.value).subscribe({
         next: (data) => {
-          console.log(data);
+         
+          
+          this.snackBar.open(
+            `Bienvenido, ${data}`,
+            'Cerrar',
+            { duration: 3000 }
+          );
         },
         error: (e) => {
-          console.log(e);
+          this.snackBar.open(
+            e.error.error,
+            'Cerrar',
+            { duration: 3000 }
+          );
         }
       });
     }

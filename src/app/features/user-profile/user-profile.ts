@@ -82,6 +82,10 @@ export class UserProfile implements OnInit {
           foto: user.foto
         });
 
+
+        this.profileForm.get('alias')?.disable();
+        this.profileForm.get('correo_electronico')?.disable();
+
         // Imagen de perfil
         if (user.foto) {
           this.previewUrl = user.foto;

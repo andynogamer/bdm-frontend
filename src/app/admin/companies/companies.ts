@@ -62,7 +62,7 @@ export class Companies implements OnInit {
 
   getImageUrl(fotoBase64: string | null): SafeUrl {
     if (!fotoBase64) {
-      return 'assets/default-user.png';
+      return 'default-company.png';
     }
     const header = 'data:image/png;base64,'; 
     return this.sanitizer.bypassSecurityTrustUrl(header + fotoBase64);

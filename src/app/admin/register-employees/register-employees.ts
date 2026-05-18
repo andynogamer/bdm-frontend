@@ -12,7 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { Header } from '../../shared/header/header';
 import { User } from '../../services/user';
-import { HttpClientModule } from '@angular/common/http';
+//import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
@@ -32,7 +32,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatProgressSpinnerModule,
     MatIconModule,
     Header,
-    HttpClientModule,
+    //HttpClientModule,
     MatSnackBarModule
   ],
   templateUrl: './register-employees.html',
@@ -68,7 +68,7 @@ export class RegisterEmployees {
   get nameFC() { return this.registerForm.get('nombre'); }
   get lastNameFC() { return this.registerForm.get('apellido'); }
   get aliasFC() { return this.registerForm.get('alias'); }
-  get emailFC() { return this.registerForm.get('corre_electronico'); }
+  get emailFC() { return this.registerForm.get('correo_electronico'); }
   get passwordFC() { return this.registerForm.get('contrasena'); }
 
   onFileSelected(event: any) {
@@ -96,7 +96,7 @@ export class RegisterEmployees {
     this.selectedFile = null;
     this.selectedFilePreview = null;
     this.registerForm.patchValue({ foto: '' });
-    this.registerForm.get('imageFormControl')?.updateValueAndValidity();
+    this.registerForm.get('foto')?.updateValueAndValidity();
   }
 
   onSubmit() {

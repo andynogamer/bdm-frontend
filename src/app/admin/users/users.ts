@@ -70,7 +70,7 @@ export class Users implements OnInit {
 
   getImageUrl(fotoBase64: string | null): SafeUrl {
     if (!fotoBase64) {
-      return 'assets/default-user.png';
+      return 'default-user.png';
     }
     const header = 'data:image/png;base64,'; 
     return this.sanitizer.bypassSecurityTrustUrl(header + fotoBase64);

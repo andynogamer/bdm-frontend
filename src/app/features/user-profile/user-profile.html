@@ -78,14 +78,32 @@
                     </mat-form-field>
                 </div>
 
-                <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Alias</mat-label>
-                    <mat-icon matPrefix>alternate_email</mat-icon>
-                    <input matInput formControlName="alias">
-                    @if (profileForm.get('alias')?.hasError('required')) {
-                        <mat-error>El alias es obligatorio</mat-error>
-                    }
-                </mat-form-field>
+                <div class="form-row">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Alias</mat-label>
+                        <mat-icon matPrefix>alternate_email</mat-icon>
+                        <input matInput formControlName="alias">
+                        @if (profileForm.get('alias')?.hasError('required')) {
+                            <mat-error>El alias es obligatorio</mat-error>
+                        }
+
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Fecha de Nacimiento</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="fecha_nacimiento">
+                        <mat-icon matPrefix>cake</mat-icon>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-hint>DD/MM/AAAA</mat-hint>
+                        @if (profileForm.get('fecha_nacimiento')?.hasError('required')) {
+                        <mat-error>La fecha es <strong>obligatoria</strong></mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+
+                
+                
 
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Correo Electrónico</mat-label>
@@ -98,6 +116,27 @@
                         <mat-error>Ingrese un correo válido</mat-error>
                     }
                 </mat-form-field>
+
+                <div class="gender-section">
+                <label>Género:</label>
+                <mat-radio-group formControlName="genero" class="gender-radiogroup">
+                    <mat-radio-button value="M">
+                    <mat-icon>male</mat-icon>
+                    Masculino
+                    </mat-radio-button>
+                    <mat-radio-button value="F">
+                    <mat-icon>female</mat-icon>
+                    Femenino
+                    </mat-radio-button>
+                    <mat-radio-button value="X">
+                    <mat-icon>transgender</mat-icon>
+                    Otro
+                    </mat-radio-button>
+                </mat-radio-group>
+                @if (profileForm.get('genero')?.hasError('required') && profileForm.get('genero')?.touched) {
+                    <mat-error class="gender-error">Seleccione una opción</mat-error>
+                }
+                </div>
 
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Nueva contraseña</mat-label>

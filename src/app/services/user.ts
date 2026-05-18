@@ -22,13 +22,21 @@ export class User {
       withCredentials: true
     });
   }
+  
   postUser(user: any){
     return this.http.post<any>(this.API_URL, user, {
       withCredentials: true
     });
   }
+
   postLogin(user: any){
     return this.http.post<any>(this.API_URL + '/login', user, {
+      withCredentials: true
+    })
+  }
+
+  updateUser(user: any){
+    return this.http.post<any>(this.API_URL + '/update', user, {
       withCredentials: true
     })
   }

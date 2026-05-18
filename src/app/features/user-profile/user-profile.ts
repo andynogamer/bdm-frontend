@@ -6,6 +6,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatRadioModule } from '@angular/material/radio';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { Header } from '../../shared/header/header';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -13,6 +16,7 @@ import { User } from '../../services/user';
 
 @Component({
   selector: 'app-user-profile',
+  providers: [provideNativeDateAdapter()],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -22,7 +26,9 @@ import { User } from '../../services/user';
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
-    Header
+    Header,
+    MatDatepickerModule,
+    MatRadioModule
   ],
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.scss',
@@ -47,6 +53,8 @@ export class UserProfile implements OnInit {
       nombre: new FormControl('', [Validators.required]),
       apellido: new FormControl('', [Validators.required]),
       alias: new FormControl('', [Validators.required]),
+      genero: new FormControl('', [Validators.required]),
+      fecha_nacimiento: new FormControl('', [Validators.required]),
       correo_electronico: new FormControl('', [Validators.required, Validators.email]),
       contrasena: new FormControl('', [Validators.minLength(8)]),
       foto: new FormControl(null)
@@ -63,6 +71,8 @@ export class UserProfile implements OnInit {
           nombre: user.nombre,
           apellido: user.apellido,
           alias: user.alias,
+          fecha_nacimiento: user.fecha_nacimiento,
+          genero: user.genero,
           correo_electronico: user.correo_electronico
         });
 
@@ -74,7 +84,7 @@ export class UserProfile implements OnInit {
 
       error: (err) => {
         console.error(err);
-
+        console.log('HAY UN ERROR!!!')
         this.snackBar.open(
           'Error al cargar el perfil',
           'Cerrar',
@@ -104,13 +114,25 @@ export class UserProfile implements OnInit {
 
     if (this.profileForm.valid) {
 
-      console.log(this.profileForm.value);
-
-      this.snackBar.open(
-        'Información actualizada correctamente',
-        'Cerrar',
-        { duration: 3000 }
-      );
+      this.userService.updateUser(this.profileForm.value).subscribe({
+        next: (data) =>{
+          
+          this.snackBar.open(
+            'Información actualizada correctamente',
+            'Cerrar',
+            { duration: 3000 }
+          );
+        },
+        error: (e) => {
+          console.log(e);
+          this.snackBar.open(
+            e.error.error,
+            'Cerrar',
+            { duration: 3000 }
+          );
+        }
+      })
+      
     }
   }
 }

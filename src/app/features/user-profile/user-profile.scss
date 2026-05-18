@@ -36,6 +36,48 @@
     color: white;
 }
 
+
+.gender-section {
+  padding: 15px 0;
+  background: #F8F9FA;
+  border-radius: 12px;
+  padding: 15px;
+  
+  label {
+    font-weight: 600;
+    color: #29353C;
+    margin-right: 20px;
+    display: block;
+    margin-bottom: 10px;
+  }
+}
+
+.gender-radiogroup {
+  display: flex;
+  gap: 25px;
+  
+  ::ng-deep .mdc-radio {
+    padding: 0 8px 0 0;
+  }
+  
+  ::ng-deep .mdc-form-field {
+    color: #44576D;
+  }
+  
+  mat-icon {
+    font-size: 18px;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+}
+
+.gender-error {
+  font-size: 0.7rem;
+  margin-top: 5px;
+  display: block;
+}
+
+
 .hero-text {
     margin-bottom: 50px;
 
@@ -394,4 +436,9 @@
         width: 140px;
         height: 140px;
     }
+
+    .gender-radiogroup {
+    flex-direction: column;
+    gap: 10px;
+  }
 }

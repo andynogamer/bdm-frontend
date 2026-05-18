@@ -56,7 +56,12 @@ export class UserProfile implements OnInit {
       genero: new FormControl('', [Validators.required]),
       fecha_nacimiento: new FormControl('', [Validators.required]),
       correo_electronico: new FormControl('', [Validators.required, Validators.email]),
-      contrasena: new FormControl('', [Validators.minLength(8)]),
+      contrasena: new FormControl('', 
+        [
+          Validators.pattern(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/
+          )
+        ]),
       foto: new FormControl(null)
     });
 

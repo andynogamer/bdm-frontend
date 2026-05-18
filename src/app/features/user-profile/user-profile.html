@@ -146,8 +146,8 @@
                         <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </button>
                     <mat-hint>Dejar en blanco para no cambiar (mínimo 8 caracteres si se cambia)</mat-hint>
-                    @if (profileForm.get('contrasena')?.hasError('minlength')) {
-                        <mat-error>La contraseña debe tener al menos 8 caracteres</mat-error>
+                    @if (profileForm.get('contrasena')?.hasError('pattern')) {
+                        <mat-error>La contraseña debe tener al menos 8 caracteres, mayúscula, minúscula, número y caracter especial.</mat-error>
                     }
                 </mat-form-field>
 

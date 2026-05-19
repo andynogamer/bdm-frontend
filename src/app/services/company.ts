@@ -11,6 +11,12 @@ export class Company {
     this.companies = [];
   }
 
+  postCompany(company : any){
+    return this.http.post<any>(this.API_URL + '/register', company, {
+      withCredentials: true
+    })
+  }
+
   getCompanies(){
     return this.http.get<any[]>(this.API_URL, {
       withCredentials: true

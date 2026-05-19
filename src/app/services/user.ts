@@ -11,6 +11,12 @@ export class User {
     this.users = [];
   }
 
+  getAllInsured(){
+    return this.http.get<any>(this.API_URL + '/insured', {
+      withCredentials: true
+    });
+  }
+
   getProfile(){
     return this.http.get<any>(this.API_URL + '/profile', {
       withCredentials: true

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { User } from '../../services/user';
 import { Company } from '../../services/company';
+import { PolicyService } from '../../services/policy-service';
 
 // TODO: Importar tu servicio correspondiente cuando lo conectes a la API
 // import { PolicyService } from '../../services/policy.service';
@@ -62,8 +63,10 @@ export class RegisterPolicy implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     public userService: User,
-    public companyService: Company
-    // public policyService: PolicyService // Inyecta tu servicio aquí
+    public companyService: Company,
+    public policyService: PolicyService,
+    private cdr: ChangeDetectorRef
+    
   ) { }
 
   ngOnInit() {
@@ -108,8 +111,8 @@ export class RegisterPolicy implements OnInit {
       this.isLoading = true;
       console.log('Datos a enviar:', this.registerForm.value);
 
-      /* TODO: Descomentar y adaptar cuando conectes tu API
-      this.policyService.postPolicyWithUnit(this.registerForm.value).subscribe({
+      
+      this.policyService.postPolicy(this.registerForm.value).subscribe({
         next: (data) => {
           this.isLoading = false;
           this.mensajeExito = 'Póliza y unidad registradas correctamente.';
@@ -122,13 +125,7 @@ export class RegisterPolicy implements OnInit {
           this.snackBar.open(this.mensajeError, 'Cerrar', { duration: 3000 });
         }
       });
-      */
-
-      // Simulación temporal para ver el funcionamiento
-      setTimeout(() => {
-        this.isLoading = false;
-        this.snackBar.open('Formulario válido. Listo para enviar a la API.', 'Cerrar', { duration: 3000 });
-      }, 1000);
+      
     }
   }
 }

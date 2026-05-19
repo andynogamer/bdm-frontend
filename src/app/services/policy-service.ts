@@ -11,10 +11,16 @@ export class PolicyService {
     this.policies = []
   }
 
+  getPolicies(){
+    return this.http.get<any[]>(this.API_URL, {
+      withCredentials: true
+    });
+  }
+
   postPolicy(policy: any){
     return this.http.post<any>(this.API_URL + '/register', policy ,{
       withCredentials: true
-    })
+    });
   }
 
 }

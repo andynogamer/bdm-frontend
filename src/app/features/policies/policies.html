@@ -1,80 +1,101 @@
 <app-header></app-header>
 
 <div class="policies-dashboard">
-    <div class="dashboard-header">
-        <div class="title-section">
-            <h1>Gestión de Pólizas</h1>
-            <p>Visualiza y administra todas las pólizas y vehículos registrados</p>
+    <div class="left-panel">
+        <div class="left-content">
+            <div class="hero-text">
+                <h2>Gestión de<br><span>Pólizas</span></h2>
+                <p>Administra los perfiles de asegurados, ajustadores y administradores del sistema.</p>
+            </div>
+            <div class="stats-summary">
+                @if(totalPolizas > 0){
+                <div class="stat-item">
+                    <div class="stat-number">{{totalPolizas}}</div>
+                    <div class="stat-label">Total Pólizas</div>
+                </div>
+                
+                }
+            </div>
         </div>
-        
-        <button mat-raised-button class="btn-add">
-            <mat-icon>add</mat-icon>
-            NUEVA PÓLIZA
-        </button>
+        <div class="decorative-circles">
+            </div>
     </div>
-
-    @if (isLoading) {
-        <div class="loading-state">
-            <mat-spinner diameter="40"></mat-spinner>
-            <p>Cargando pólizas...</p>
+    <div class="right-panel">
+        <div class="dashboard-header">
+            <div class="title-section">
+                <h1>Gestión de Pólizas</h1>
+                <p>Visualiza y administra todas las pólizas y vehículos registrados</p>
+            </div>
+            
+            <button mat-raised-button class="btn-add" routerLink="/register-policy" matTooltip="Registrar nuevo usuario">
+                <mat-icon>add</mat-icon>
+                NUEVA PÓLIZA
+            </button>
         </div>
-    } @else {
-        <div class="cards-grid">
-            @for (poliza of polizas; track poliza.id_poliza) {
-                <div class="policy-card">
-                    <div class="card-header">
-                        <div class="company-info">
-                            <div class="company-avatar">
-                                <mat-icon>business</mat-icon>
-                            </div>
-                            <span class="company-name">{{ poliza.nombre_compania }}</span>
-                        </div>
-                        <span class="status-badge" [class.active]="poliza.estatus_poliza === 'ACTIVA'" [class.inactive]="poliza.estatus_poliza !== 'ACTIVA'">
-                            {{ poliza.estatus_poliza }}
-                        </span>
-                    </div>
 
-                    <div class="card-body">
-                        <div class="policy-number">
-                            <mat-icon>workspace_premium</mat-icon>
-                            <h3>{{ poliza.numero_poliza }}</h3>
-                        </div>
-
-                        <div class="info-group">
-                            <div class="info-item">
-                                <mat-icon class="icon-person">person</mat-icon>
-                                <div class="text-data">
-                                    <strong>{{ poliza.nombre_completo_asegurado }}</strong>
-                                    <span>{{ poliza.correo_asegurado }}</span>
-                                    <span class="alias">&#64;{{ poliza.alias_asegurado }}</span>
+        @if (isLoading) {
+            <div class="loading-state">
+                <mat-spinner diameter="40"></mat-spinner>
+                <p>Cargando pólizas...</p>
+            </div>
+        } @else {
+            <div class="cards-grid">
+                @for (poliza of polizas; track poliza.id_poliza) {
+                    <div class="policy-card">
+                        <div class="card-header">
+                            <div class="company-info">
+                                <div class="company-avatar">
+                                    <mat-icon>business</mat-icon>
                                 </div>
+                                <span class="company-name">{{ poliza.nombre_compania }}</span>
+                            </div>
+                            <span class="status-badge" [class.active]="poliza.estatus_poliza === 'ACTIVA'" [class.inactive]="poliza.estatus_poliza !== 'ACTIVA'">
+                                {{ poliza.estatus_poliza }}
+                            </span>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="policy-number">
+                                <mat-icon>workspace_premium</mat-icon>
+                                <h3>{{ poliza.numero_poliza }}</h3>
                             </div>
 
-                            <div class="info-item">
-                                <mat-icon class="icon-car">directions_car</mat-icon>
-                                <div class="text-data">
-                                    <strong>{{ poliza.vehiculo_desc }}</strong>
-                                    <div class="vehicle-details">
-                                        <span class="plate-badge">{{ poliza.placas }}</span>
-                                        <span class="deductible">Deducible: {{ poliza.porcentaje_deducible }}%</span>
+                            <div class="info-group">
+                                <div class="info-item">
+                                    <mat-icon class="icon-person">person</mat-icon>
+                                    <div class="text-data">
+                                        <strong>{{ poliza.nombre_completo_asegurado }}</strong>
+                                        <span>{{ poliza.correo_asegurado }}</span>
+                                        <span class="alias">&#64;{{ poliza.alias_asegurado }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="info-item">
+                                    <mat-icon class="icon-car">directions_car</mat-icon>
+                                    <div class="text-data">
+                                        <strong>{{ poliza.vehiculo_desc }}</strong>
+                                        <div class="vehicle-details">
+                                            <span class="plate-badge">{{ poliza.placas }}</span>
+                                            <span class="deductible">Deducible: {{ poliza.porcentaje_deducible }}%</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="card-footer">
-                        <button mat-button class="action-btn edit" (click)="editarPoliza(poliza.id_poliza)">
-                            <mat-icon>edit</mat-icon>
-                            Editar
-                        </button>
-                        <button mat-button class="action-btn delete" (click)="eliminarPoliza(poliza.id_poliza)">
-                            <mat-icon>delete_outline</mat-icon>
-                            Eliminar
-                        </button>
+                        <div class="card-footer">
+                            <button mat-button class="action-btn edit" (click)="editarPoliza(poliza.id_poliza)">
+                                <mat-icon>edit</mat-icon>
+                                Editar
+                            </button>
+                            <button mat-button class="action-btn delete" (click)="eliminarPoliza(poliza.id_poliza)">
+                                <mat-icon>delete_outline</mat-icon>
+                                Eliminar
+                            </button>
+                        </div>
                     </div>
-                </div>
-            }
-        </div>
-    }
+                }
+            </div>
+        }
+    </div>
 </div>

@@ -7,6 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Header } from '../../shared/header/header';
 import { PolicyService } from '../../services/policy-service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 
 // TODO: Importar tu servicio
 // import { PolicyService } from '../../services/policy.service';
@@ -20,12 +21,13 @@ import { DomSanitizer } from '@angular/platform-browser';
     MatButtonModule,
     MatMenuModule,
     MatProgressSpinnerModule,
-    Header
+    Header, RouterModule
   ],
   templateUrl: './policies.html',
   styleUrl: './policies.scss',
 })
 export class Policies implements OnInit {
+  totalPolizas = 0;
   polizas: any[] = [];
   isLoading = true;
 
@@ -46,14 +48,20 @@ export class Policies implements OnInit {
     
     this.policyService.getPolicies().subscribe({
       next: (data) => {
-        this.polizas = data;
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.polizas = data;
+          this.totalPolizas = this.polizas.length;
+          this.isLoading = false;
+          
+          this.cdr.detectChanges();
+        });
       },
       error: (err) => {
-        console.error('Error al cargar pólizas', err);
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        setTimeout(() => {
+          console.error('Error al cargar pólizas', err);
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        });
       }
     });
     

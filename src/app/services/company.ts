@@ -16,5 +16,10 @@ export class Company {
       withCredentials: true
     });
   }
+  getCompaniesWithoutPhoto(){
+    return this.http.get<any[]>(this.API_URL + '/list', {
+      withCredentials: true
+    });
+  }
   
 }

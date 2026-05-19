@@ -88,8 +88,12 @@
                     <mat-label>Compañía Aseguradora</mat-label>
                     <mat-icon matPrefix>business</mat-icon>
                     <mat-select formControlName="id_compania">
-                        <mat-option value="1">Seguros Monterrey</mat-option>
-                        <mat-option value="2">GNP Seguros</mat-option>
+                        @for (compania of companias; track compania.id_compania){
+                            <mat-option [value]="compania.id_compania">
+                                {{compania.id_compania}} - {{compania.nombre}}
+                            </mat-option>
+                        }
+                        
                     </mat-select>
                     @if (companiaFC?.hasError('required')) {
                         <mat-error>Seleccione una <strong>compañía</strong></mat-error>

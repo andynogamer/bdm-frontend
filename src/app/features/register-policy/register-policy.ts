@@ -10,6 +10,7 @@ import { Header } from '../../shared/header/header';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { User } from '../../services/user';
+import { Company } from '../../services/company';
 
 // TODO: Importar tu servicio correspondiente cuando lo conectes a la API
 // import { PolicyService } from '../../services/policy.service';
@@ -61,12 +62,13 @@ export class RegisterPolicy implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     public userService: User,
+    public companyService: Company
     // public policyService: PolicyService // Inyecta tu servicio aquí
   ) { }
 
   ngOnInit() {
     // Aquí puedes llamar a tu API para cargar los catálogos de compañías y asegurados
-    // this.loadCompanias();
+    this.cargarCompanias();
     this.cargarAsegurados();
   }
 
@@ -87,6 +89,18 @@ export class RegisterPolicy implements OnInit {
         this.snackBar.open('Error al cargar la lista de asegurados', 'Cerrar', { duration: 3000 });
       }
     });
+  }
+  cargarCompanias(){
+    this.companyService.getCompaniesWithoutPhoto().subscribe({
+      next: (data)=>{
+        this.companias = data;
+
+      },
+      error:(e) => {
+        console.error('Error al cargar compañias:', e);
+        this.snackBar.open('Error al cargar la lista de asegurados', 'Cerrar', { duration: 3000 });
+      }
+    })
   }
 
   onSubmit() {

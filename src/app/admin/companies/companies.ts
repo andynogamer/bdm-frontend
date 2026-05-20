@@ -9,6 +9,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Company } from '../../services/company';
+import Swal from 'sweetalert2'; 
 
 @Component({
   selector: 'app-companies',
@@ -66,5 +67,36 @@ export class Companies implements OnInit {
     }
     const header = 'data:image/png;base64,'; 
     return this.sanitizer.bypassSecurityTrustUrl(header + fotoBase64);
+  }
+  eliminarCompania(id_compania: number){
+    Swal.fire({
+      title: '¿Dar de baja a la compañia?',
+      text: "Esta acción no se puede deshacer",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#C62828', // Color rojo de tu CSS
+      cancelButtonColor: '#768A96',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.companyService.deleteCompany({'id_compania': id_compania}).subscribe({
+          next: () => {
+            Swal.fire('¡Eliminado!', 'La compañia ha sido dado de baja.', 'success');
+            this.listaCompanias = this.listaCompanias.filter(empresa => empresa.id_compania !== id_compania);
+            
+           
+            this.totalCompanies = this.listaCompanias.length; 
+            
+            
+            this.cdr.detectChanges();
+          },
+          error: (error) => {
+            console.error('Error al eliminar:', error);
+            Swal.fire('Error', 'Hubo un problema al eliminar la compañia.', 'error');
+          }
+        });
+      }
+    });
   }
 }

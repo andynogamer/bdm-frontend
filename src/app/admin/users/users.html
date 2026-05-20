@@ -82,17 +82,15 @@
                                 <span>{{usuario.alias}}</span>
                             </div>
                         </div>
-
+                        @if(usuario.tipo_usuario !== 2){
                         <div class="user-actions">
-                            <button mat-button class="action-btn edit-btn" matTooltip="Editar usuario">
-                                <mat-icon>edit</mat-icon>
-                                <span>Editar</span>
-                            </button>
+                            
                             <button mat-button class="action-btn delete-btn" matTooltip="Dar de baja" (click)="eliminarUsuario(usuario.id_usuario)">
                                 <mat-icon>person_remove</mat-icon>
                                 <span>Eliminar</span>
                             </button>
                         </div>
+                        }
                     </mat-card>
                 }
             } @empty {

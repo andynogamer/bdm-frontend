@@ -1,0 +1,66 @@
+<app-header></app-header>
+
+<div class="edit-company-container">
+    <div class="left-panel">
+        <div class="left-content">
+            <div class="hero-text">
+                <h2>Edición de<br><span>Compañías</span></h2>
+                <p>Modifica los datos de la compañía seleccionada</p>
+            </div>
+        </div>
+        <div class="decorative-circles">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+            <div class="circle circle-3"></div>
+            <div class="circle circle-4"></div>
+        </div>
+    </div>
+
+    <div class="right-panel">
+        <div class="form-header">
+            <h1>Editar Compañía</h1>
+            <p class="subtitle">Actualiza los campos que requieran modificación</p>
+        </div>
+
+        @if (isLoading) {
+            <div class="loading-message">
+                <mat-spinner diameter="24"></mat-spinner>
+                <span>Cargando datos...</span>
+            </div>
+        }
+
+        <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="form-content">
+            <div class="form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Nombre</mat-label>
+                    <mat-icon matPrefix>business</mat-icon>
+                    <input matInput formControlName="nombre" placeholder="Ej. Qualitas">
+                    @if (nameFC?.hasError('required')) {
+                        <mat-error>El nombre es <strong>obligatorio</strong></mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <div class="file-upload" (click)="fileInput.click()">
+                <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none">
+                <div class="upload-area">
+                    <mat-icon>cloud_upload</mat-icon>
+                    <span *ngIf="!selectedFilePreview">Actualizar logo de la compañía</span>
+                    <span *ngIf="selectedFilePreview">Cambiar imagen</span>
+                    <small>Formatos: JPG, PNG (máx. 5MB)</small>
+                </div>
+                <div *ngIf="selectedFilePreview" class="image-preview">
+                    <img [src]="selectedFilePreview" alt="Vista previa">
+                    <button type="button" class="remove-image" (click)="removeImage($event)">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <button mat-raised-button class="submit-btn" type="submit" [disabled]="!editForm.valid || isLoading">
+                {{ isLoading ? 'GUARDANDO...' : 'GUARDAR CAMBIOS' }}
+                <mat-icon>save</mat-icon>
+            </button>
+        </form>
+    </div>
+</div>

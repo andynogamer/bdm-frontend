@@ -11,6 +11,12 @@ export class Company {
     this.companies = [];
   }
 
+  getCompanyById(id: number){
+    return this.http.get<any>(this.API_URL + `/get/${id}`, {
+      withCredentials: true
+    })
+  }
+
   deleteCompany(company : any){
     return this.http.post<any>(this.API_URL + '/delete', company, {
       withCredentials: true

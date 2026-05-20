@@ -43,7 +43,7 @@
                     </div>
 
                     <div class="company-actions">
-                        <button mat-button class="action-btn edit-btn" matTooltip="Editar compañia">
+                        <button mat-button class="action-btn edit-btn" matTooltip="Editar compañia" [routerLink]="['/edit-company', empresa.id_compania]">
                             <mat-icon>edit</mat-icon>
                             <span>Editar</span>
                         </button>

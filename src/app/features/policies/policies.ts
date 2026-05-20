@@ -8,6 +8,7 @@ import { Header } from '../../shared/header/header';
 import { PolicyService } from '../../services/policy-service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import Swal from 'sweetalert2'; 
 
 // TODO: Importar tu servicio
 // import { PolicyService } from '../../services/policy.service';
@@ -75,7 +76,30 @@ export class Policies implements OnInit {
   }
 
   eliminarPoliza(id: number) {
-    console.log('Eliminar póliza ID:', id);
-    // TODO: Lógica para confirmar y eliminar
+    Swal.fire({
+      title: '¿Dar de baja póliza?',
+      text: "Esta acción no se puede deshacer",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#C62828', // Color rojo de tu CSS
+      cancelButtonColor: '#768A96',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result)=>{
+      if (result.isConfirmed) {
+        this.policyService.deletePolicy({'id_poliza': id}).subscribe({
+          next: (data) =>{
+            Swal.fire('¡Eliminado!', 'La poliza ha sido dado de baja.', 'success');
+            this.cargarPolizas();
+          },
+          error: (error) => {
+            console.error('Error al eliminar:', error);
+            Swal.fire('Error', 'Hubo un problema al eliminar la póliza.', 'error');
+          }
+        });
+      }
+    });
+    
+    
   }
 }

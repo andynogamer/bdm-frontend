@@ -11,6 +11,12 @@ export class PolicyService {
     this.policies = []
   }
 
+  deletePolicy(policy: any){
+    return this.http.post<any>(this.API_URL + '/delete', policy ,{
+      withCredentials: true
+    });
+  }
+
   getPolicies(){
     return this.http.get<any[]>(this.API_URL, {
       withCredentials: true

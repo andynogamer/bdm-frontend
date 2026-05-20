@@ -1,0 +1,172 @@
+<app-header></app-header>
+
+<div class="edit-policy-container">
+    <div class="left-panel">
+        <div class="left-content">
+            <div class="hero-text">
+                <h2>Edición de<br><span>Póliza y Unidad</span></h2>
+                <p>Modifica los datos del contrato de seguro y la información del vehículo amparado.</p>
+            </div>
+            <div class="info-cards">
+                <div class="info-card">
+                    <mat-icon>verified_user</mat-icon>
+                    <div>
+                        <strong>Contrato de Póliza</strong>
+                        <span>Vinculación con la compañía aseguradora</span>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <mat-icon>directions_car</mat-icon>
+                    <div>
+                        <strong>Datos de la Unidad</strong>
+                        <span>Registro de placas, serie y características</span>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <mat-icon>account_box</mat-icon>
+                    <div>
+                        <strong>Asegurado</strong>
+                        <span>Asignación al cliente o beneficiario</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="decorative-circles">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+            <div class="circle circle-3"></div>
+            <div class="circle circle-4"></div>
+        </div>
+    </div>
+
+    <div class="right-panel">
+        <div class="form-header">
+            <h1>Editar Póliza</h1>
+            <p class="subtitle">Actualiza los campos que requieran modificación</p>
+        </div>
+
+        @if (mensajeExito) {
+            <div class="success-message">
+                <mat-icon>check_circle</mat-icon>
+                <span>{{ mensajeExito }}</span>
+            </div>
+        }
+
+        @if (mensajeError) {
+            <div class="error-message">
+                <mat-icon>error</mat-icon>
+                <span>{{ mensajeError }}</span>
+            </div>
+        }
+
+        @if (isLoading) {
+            <div class="loading-message">
+                <mat-spinner diameter="24"></mat-spinner>
+                <span>Procesando datos de la póliza...</span>
+            </div>
+        }
+
+        <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="form-content">
+            
+            <h3 class="section-title">Datos de la Póliza</h3>
+            
+            <div class="form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Porcentaje Deducible (%)</mat-label>
+                    <mat-icon matPrefix>percent</mat-icon>
+                    <input type="number" matInput formControlName="porcentaje_deducible" placeholder="Ej. 5">
+                    @if (deducibleFC?.hasError('required')) {
+                        <mat-error>El deducible es <strong>obligatorio</strong></mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <div class="form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Compañía Aseguradora</mat-label>
+                    <mat-icon matPrefix>business</mat-icon>
+                    <mat-select formControlName="id_compania">
+                        @for (compania of companias; track compania.id_compania){
+                            <mat-option [value]="compania.id_compania">
+                                {{compania.id_compania}} - {{compania.nombre}}
+                            </mat-option>
+                        }
+                    </mat-select>
+                    @if (companiaFC?.hasError('required')) {
+                        <mat-error>Seleccione una <strong>compañía</strong></mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Asegurado (Propietario)</mat-label>
+                    <mat-icon matPrefix>person</mat-icon>
+                    <mat-select formControlName="id_asegurado">
+                        @for (asegurado of asegurados; track asegurado.id_usuario) {
+                            <mat-option [value]="asegurado.id_usuario">
+                                {{ asegurado.id_usuario }} - {{ asegurado.alias }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                    @if (aseguradoFC?.hasError('required')) {
+                        <mat-error>Seleccione un <strong>asegurado</strong></mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <h3 class="section-title">Datos de la Unidad (Vehículo)</h3>
+
+            <div class="form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Marca</mat-label>
+                    <mat-icon matPrefix>directions_car</mat-icon>
+                    <input matInput formControlName="marca" placeholder="Ej. Nissan">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Modelo</mat-label>
+                    <mat-icon matPrefix>commute</mat-icon>
+                    <input matInput formControlName="modelo" placeholder="Ej. Versa">
+                </mat-form-field>
+            </div>
+
+            <div class="form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Año</mat-label>
+                    <mat-icon matPrefix>calendar_today</mat-icon>
+                    <input type="number" matInput formControlName="anio" placeholder="Ej. 2024">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Color</mat-label>
+                    <mat-icon matPrefix>palette</mat-icon>
+                    <input matInput formControlName="color" placeholder="Ej. Plata">
+                </mat-form-field>
+            </div>
+
+            <div class="form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Placas</mat-label>
+                    <mat-icon matPrefix>pin</mat-icon>
+                    <input matInput formControlName="placas" placeholder="Ej. STF-1234">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Número de Serie (VIN)</mat-label>
+                    <mat-icon matPrefix>qr_code</mat-icon>
+                    <input matInput formControlName="numero_serie" placeholder="17 caracteres">
+                </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Valor Comercial Estimado ($)</mat-label>
+                <mat-icon matPrefix>attach_money</mat-icon>
+                <input type="number" matInput formControlName="valor" placeholder="Ej. 250000.00">
+            </mat-form-field>
+
+            <button mat-raised-button class="submit-btn" type="submit" [disabled]="!editForm.valid || isLoading">
+                {{ isLoading ? 'GUARDANDO...' : 'GUARDAR CAMBIOS' }}
+                <mat-icon>save</mat-icon>
+            </button>
+        </form>
+    </div>
+</div>

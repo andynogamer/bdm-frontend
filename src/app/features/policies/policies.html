@@ -84,7 +84,7 @@
                         </div>
 
                         <div class="card-footer">
-                            <button mat-button class="action-btn edit" (click)="editarPoliza(poliza.id_poliza)">
+                            <button mat-button class="action-btn edit" (click)="editarPoliza(poliza.id_poliza)" [routerLink]="['/edit-policy', poliza.id_poliza]">
                                 <mat-icon>edit</mat-icon>
                                 Editar
                             </button>

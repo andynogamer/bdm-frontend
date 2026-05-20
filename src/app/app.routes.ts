@@ -13,6 +13,7 @@ import { RegisterCompany } from './admin/register-company/register-company';
 import { Policies } from './features/policies/policies';
 import { RegisterPolicy } from './features/register-policy/register-policy';
 import { EditCompany } from './admin/edit-company/edit-company';
+import { EditPolicy } from './features/edit-policy/edit-policy';
 
 export const routes: Routes = [
     {
@@ -70,5 +71,8 @@ export const routes: Routes = [
     {
         path: 'edit-company/:id',
         component: EditCompany
+    },{
+        path: 'edit-policy/:id',
+        component: EditPolicy
     }
 ];

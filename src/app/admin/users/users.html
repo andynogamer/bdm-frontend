@@ -88,7 +88,7 @@
                                 <mat-icon>edit</mat-icon>
                                 <span>Editar</span>
                             </button>
-                            <button mat-button class="action-btn delete-btn" matTooltip="Dar de baja">
+                            <button mat-button class="action-btn delete-btn" matTooltip="Dar de baja" (click)="eliminarUsuario(usuario.id_usuario)">
                                 <mat-icon>person_remove</mat-icon>
                                 <span>Eliminar</span>
                             </button>

@@ -9,6 +9,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { User } from '../../services/user';
+import Swal from 'sweetalert2'; 
+
 
 @Component({
   selector: 'app-users',
@@ -79,5 +81,30 @@ export class Users implements OnInit {
   // ¡CORREGIDO! Ahora busca en listaUsers y no en el servicio
   getUsersByType(tipo: number): number {
     return this.listaUsers.filter(u => u.tipo_usuario === tipo).length;
+  }
+  eliminarUsuario(id_usuario: number) {
+    Swal.fire({
+      title: '¿Dar de baja al usuario?',
+      text: "Esta acción no se puede deshacer",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#C62828', // Color rojo de tu CSS
+      cancelButtonColor: '#768A96',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.userService.deleteUser({'id_usuario': id_usuario}).subscribe({
+          next: () => {
+            Swal.fire('¡Eliminado!', 'El usuario ha sido dado de baja.', 'success');
+            this.getUsers(); // Recarga las cards
+          },
+          error: (error) => {
+            console.error('Error al eliminar:', error);
+            Swal.fire('Error', 'Hubo un problema al eliminar el usuario.', 'error');
+          }
+        });
+      }
+    });
   }
 }

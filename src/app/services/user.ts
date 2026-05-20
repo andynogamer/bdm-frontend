@@ -11,6 +11,12 @@ export class User {
     this.users = [];
   }
 
+  deleteUser(user:any){
+    return this.http.post<any>(this.API_URL + '/delete', user, {
+      withCredentials: true
+    });
+  }
+
   getAllInsured(){
     return this.http.get<any>(this.API_URL + '/insured', {
       withCredentials: true

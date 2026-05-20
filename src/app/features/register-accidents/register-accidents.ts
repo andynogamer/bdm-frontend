@@ -11,6 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PolicyService } from '../../services/policy-service';
+import { AccidentService } from '../../services/accident-service';
 
 // TODO: Importa tus servicios reales
 // import { PolicyService } from '../../services/policy.service';
@@ -58,8 +60,8 @@ export class RegisterAccidents implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef,
-    // public policyService: PolicyService,
-    // public accidentService: AccidentService
+    public policyService: PolicyService,
+    public accidentService: AccidentService
   ) {}
 
   ngOnInit(): void {
@@ -95,16 +97,17 @@ export class RegisterAccidents implements OnInit {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         const base64Completo = e.target.result;
-        // Extraemos solo el Base64 limpio para la base de datos
-        const base64Puro = base64Completo.split(',')[1];
         
+        // ¡CAMBIO CLAVE! 
+        // Como tu PHP hace: explode(',', $base64String) y valida count($partes) === 2
+        // debemos guardar y enviar el base64Completo (con todo y el "data:image/png;base64,")
         this.archivosProcesados.push({
           archivo: file,
-          base64: base64Puro,
-          mime_type: file.type // ej. image/png o video/mp4
+          base64: base64Completo, 
+          mime_type: file.type
         });
         
-        this.cdr.detectChanges(); // Vital porque FileReader corre fuera de Angular
+        this.cdr.detectChanges(); 
       };
       reader.readAsDataURL(file);
     });
@@ -122,49 +125,66 @@ export class RegisterAccidents implements OnInit {
       this.mensajeExito = '';
       this.cdr.detectChanges();
 
-      // 1. Armamos el array de multimedia como lo espera la base de datos
-      const multimediaArray = this.archivosProcesados.map(item => ({
-        evidencia: item.base64,
-        etiqueta: item.archivo.name,
-        mime_type: item.mime_type
-      }));
+      const formValues = this.registerForm.value;
 
-      // 2. Preparamos el payload final
-      const payload = {
-        siniestro: this.registerForm.value,
-        multimedia: multimediaArray
+      // 1. FORMATEAR FECHA DE NACIMIENTO (De objeto Date a YYYY-MM-DD)
+      const fechaNacObj = new Date(formValues.fecha_nacimiento_chofer!);
+      const mes = String(fechaNacObj.getMonth() + 1).padStart(2, '0');
+      const dia = String(fechaNacObj.getDate()).padStart(2, '0');
+      const fechaNacFormatted = `${fechaNacObj.getFullYear()}-${mes}-${dia}`;
+
+      // 2. FORMATEAR FECHA Y HORA DEL SINIESTRO (De "YYYY-MM-DDTHH:mm" a "YYYY-MM-DD HH:mm:ss")
+      // Reemplazamos la "T" que pone HTML5 por un espacio para que MySQL lo lea nativo
+      let fechaHoraFormatted = formValues.fecha_hora_siniestro?.replace('T', ' ');
+      // Le agregamos los segundos al final si no los tiene
+      if (fechaHoraFormatted?.length === 16) { 
+        fechaHoraFormatted += ':00';
+      }
+
+      // 3. CONSTRUIR EL OBJETO "siniestro"
+      const siniestroPayload = {
+        ...formValues,
+        fecha_nacimiento_chofer: fechaNacFormatted,
+        fecha_hora_siniestro: fechaHoraFormatted
       };
 
-      console.log('Payload a enviar:', payload);
+      // 4. CONSTRUIR EL ARREGLO "multimedias" (Exactamente con las llaves que lee tu PHP)
+      const multimediasPayload = this.archivosProcesados.map(item => ({
+        evidencia: item.base64,       // Trae la cabecera, PHP la limpiará
+        etiqueta: item.archivo.name,  // Nombre del archivo original
+        mime_type: item.mime_type     // Ej. 'image/jpeg' o 'video/mp4'
+      }));
 
-      // TODO: Descomentar cuando conectes a tu API
-      /*
+      // 5. ARMAR EL PAYLOAD FINAL
+      // Tu PHP busca $data['siniestro'] y $data['multimedias']
+      const payload = {
+        siniestro: siniestroPayload,
+        multimedias: multimediasPayload
+      };
+
+      console.log('Payload enviado a PHP:', payload);
+
+      // 6. LLAMAR AL SERVICIO
       this.accidentService.postAccident(payload).subscribe({
         next: (res) => {
           this.isLoading = false;
-          this.mensajeExito = 'Siniestro registrado exitosamente.';
+          this.mensajeExito = res.data || 'Siniestro y evidencias registrados correctamente.';
+          
+          // Limpiar formulario y evidencias
           this.registerForm.reset();
           this.archivosProcesados = [];
           this.cdr.detectChanges();
+          
           this.snackBar.open('Registro exitoso', 'Cerrar', { duration: 3000 });
         },
         error: (err) => {
           this.isLoading = false;
-          this.mensajeError = err.error?.error || 'Error al registrar el siniestro';
+          // Mostramos el mensaje de error que configuraste en PHP
+          this.mensajeError = err.error?.error || 'Error al registrar el siniestro en el servidor.';
           this.cdr.detectChanges();
           this.snackBar.open(this.mensajeError, 'Cerrar', { duration: 3000 });
         }
       });
-      */
-
-      // Simulación temporal:
-      setTimeout(() => {
-        this.isLoading = false;
-        this.mensajeExito = 'Siniestro simulado con éxito.';
-        this.registerForm.reset();
-        this.archivosProcesados = [];
-        this.cdr.detectChanges();
-      }, 1500);
     }
   }
 }

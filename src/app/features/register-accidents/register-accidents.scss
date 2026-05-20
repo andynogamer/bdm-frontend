@@ -161,7 +161,7 @@
 }
 
 .form-header {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     text-align: left;
 
     h1 {
@@ -176,6 +176,52 @@
         font-size: 0.9rem;
         margin: 0;
     }
+}
+
+.section-title {
+    font-size: 1.1rem;
+    color: #44576D;
+    margin: 15px 0;
+    border-bottom: 2px solid #F0F2F5;
+    padding-bottom: 8px;
+    font-weight: 600;
+}
+
+// Mensajes de Alerta
+.success-message {
+    background: #E8F5E9;
+    color: #2E7D32;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    mat-icon { font-size: 20px; width: 20px; height: 20px; }
+}
+
+.error-message {
+    background: #FFEBEE;
+    color: #C62828;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    mat-icon { font-size: 20px; width: 20px; height: 20px; }
+}
+
+.loading-message {
+    background: #E3F2FD;
+    color: #1565C0;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
 }
 
 .full-width {
@@ -226,20 +272,7 @@
     margin-right: 8px;
 }
 
-.checkbox-section {
-    margin: 10px 0;
-}
-
-.custom-checkbox {
-    --mdc-checkbox-selected-icon-color: #29353C;
-    --mdc-checkbox-unselected-icon-color: #768A96;
-    
-    ::ng-deep .mdc-label {
-        color: #5A6B7A;
-        font-size: 0.9rem;
-    }
-}
-
+// Multimedia Section
 .multimedia-section {
     margin: 20px 0;
 }
@@ -322,10 +355,18 @@
     span {
         flex: 1;
         color: #29353C;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
-    
-    small {
-        color: #768A96;
+
+    .mime-badge {
+        background: #AAC7D8;
+        color: #1a2329;
+        font-size: 0.65rem;
+        padding: 2px 6px;
+        border-radius: 12px;
+        font-weight: 600;
     }
     
     .remove-file {
@@ -355,13 +396,6 @@
     }
 }
 
-.hint {
-    font-size: 0.7rem;
-    color: #768A96;
-    margin-top: 12px;
-    text-align: center;
-}
-
 .submit-button {
     width: 100%;
     height: 52px;
@@ -372,7 +406,7 @@
     color: white !important;
     border-radius: 40px;
     transition: all 0.3s ease;
-    margin-top: 10px;
+    margin-top: 20px;
     display: flex;
     align-items: center;
     justify-content: center;

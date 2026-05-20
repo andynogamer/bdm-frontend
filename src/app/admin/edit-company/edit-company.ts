@@ -143,8 +143,12 @@ export class EditCompany implements OnInit {
     this.isLoading = true;
     this.cdr.detectChanges(); // <-- MOSTRAMOS ESTADO DE CARGA EN BOTÓN
     
-    const payload = { ...this.editForm.value, id_compania: this.idCompania };
-    /*
+    const payload: any = { 
+      nombre: this.editForm.value.nombre, 
+      logo: this.editForm.value.logo,
+      id_compania: this.idCompania 
+    };
+    
     this.companyService.updateCompany(payload).subscribe({
       next: (data) => {
         this.isLoading = false;
@@ -158,6 +162,6 @@ export class EditCompany implements OnInit {
         this.snackBar.open(e.error?.error || 'Error al actualizar', 'Cerrar', { duration: 3000 });
       }
     });
-    */
+    
   }
 }

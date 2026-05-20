@@ -11,6 +11,12 @@ export class Company {
     this.companies = [];
   }
 
+  updateCompany(payload : any){
+    return this.http.post<any>(this.API_URL + '/update', payload, {
+      withCredentials: true
+    })
+  }
+
   getCompanyById(id: number){
     return this.http.get<any>(this.API_URL + `/get/${id}`, {
       withCredentials: true

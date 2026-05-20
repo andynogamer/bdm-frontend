@@ -9,7 +9,7 @@
             </div>
             <div class="stats-info">
                 <div class="stat-item">
-                    <div class="stat-number">{{dataSource.length}}</div>
+                    <div class="stat-number">{{listaSiniestros.length}}</div>
                     <div class="stat-label">Total Siniestros</div>
                 </div>
                 <div class="stat-item">
@@ -45,44 +45,72 @@
         </div>
 
         <div class="accidents-list">
-            @for(siniestro of dataSource; track siniestro.id){
+            @for(siniestro of listaSiniestros; track siniestro.id_siniestro){
                 <mat-card class="accident-card" appearance="outlined">
+                    
+                    @if (siniestro.id_primer_multimedia) {
+                        <div class="card-media">
+                            @if (siniestro.safeMultimedia) {
+                                @if (siniestro.mime_type_multimedia.includes('video')) {
+                                    <video [src]="siniestro.safeMultimedia" controls></video>
+                                } @else {
+                                    <img [src]="siniestro.safeMultimedia" alt="Evidencia del siniestro">
+                                }
+                            } @else {
+                                <div class="media-placeholder">
+                                    <mat-spinner diameter="30"></mat-spinner>
+                                </div>
+                            }
+                            <span class="media-tag">{{siniestro.etiqueta_multimedia}}</span>
+                        </div>
+                    }
+
                     <div class="card-content">
                         <div class="card-header">
-                            <div class="insurance-badge" [style.background]="getInsuranceColor(siniestro.insurance)">
-                                <mat-icon>description</mat-icon>
+                            <div class="insurance-badge">
+                                <mat-icon>business</mat-icon>
                             </div>
                             <div class="insurance-info">
-                                <h3>{{siniestro.insurance}}</h3>
-                                <p>Póliza ID: {{siniestro.id}}</p>
+                                <h3>{{siniestro.nombre_compania}}</h3>
+                                <p>Póliza: {{siniestro.numero_poliza}}</p>
                             </div>
-                            <div class="status-badge" [class]="getStatusClass(siniestro.estatus)">
-                                <mat-icon>{{getStatusIcon(siniestro.estatus)}}</mat-icon>
-                                <span>{{getStatusText(siniestro.estatus)}}</span>
+                            <div class="status-badge" [class]="getStatusClass(siniestro.estatus_actual)">
+                                <mat-icon>{{getStatusIcon(siniestro.estatus_actual)}}</mat-icon>
+                                <span>{{ siniestro.estatus_actual ? siniestro.estatus_actual : 'REGISTRADO' }}</span>
                             </div>
                         </div>
                         <div class="card-details">
-                            <div class="detail-item">
+                            <div class="detail-item" matTooltip="asegurado">
                                 <mat-icon>person</mat-icon>
-                                <span>{{siniestro.userAffected}}</span>
+                                <span>{{siniestro.nombre_completo_asegurado}}</span>
                             </div>
-                            <div class="detail-item">
+                            <div class="detail-item" matTooltip="Fecha del suceso">
                                 <mat-icon>calendar_today</mat-icon>
-                                <span>{{siniestro.accidentDate | date:'dd/MM/yyyy'}}</span>
+                                <span>{{siniestro.fecha_hora_siniestro | date:'dd/MM/yyyy HH:mm'}}</span>
+                            </div>
+                            <div class="detail-item" matTooltip="Ubicación">
+                                <mat-icon>location_on</mat-icon>
+                                <span>{{siniestro.ubicacion}}</span>
+                            </div>
+                            <div class="detail-item" matTooltip="Ajustador">
+                                <mat-icon>engineering</mat-icon>
+                                <span>{{siniestro.alias_ajustador}}</span>
                             </div>
                         </div>
                     </div>
                     <mat-card-actions align="end">
-                        <button mat-stroked-button class="detail-button" [routerLink]="['/siniestro-detalle', siniestro.id]">
+                        <button mat-stroked-button class="detail-button" [routerLink]="['/siniestro-detalle', siniestro.id_siniestro]">
                             VER DETALLES
                             <mat-icon>arrow_forward</mat-icon>
                         </button>
                     </mat-card-actions>
                 </mat-card>
+            } @empty {
+                <p style="text-align: center; width: 100%; color: #768A96; margin-top: 40px;">No hay siniestros registrados o cargando...</p>
             }
         </div>
 
-        <button mat-fab class="fab-button" color="primary" routerLink="/register-accidents" title="Registrar nuevo siniestro">
+        <button mat-fab class="fab-button" color="primary" routerLink="/register-accidents" matTooltip="Registrar nuevo siniestro">
             <mat-icon>add</mat-icon>
         </button>
     </div>

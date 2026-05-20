@@ -175,7 +175,7 @@
 .accidents-list {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
     flex: 1;
 }
 
@@ -184,11 +184,12 @@
     border: 1px solid #E6E6E6;
     transition: all 0.3s ease;
     background: white;
+    overflow: hidden; // Vital para que la imagen respete los bordes redondos
 
     &:hover {
-        transform: translateX(4px);
+        transform: translateY(-4px); // Cambié a translateY, se ve más elegante
         border-color: #AAC7D8;
-        box-shadow: 0 4px 12px rgba(41, 53, 60, 0.1);
+        box-shadow: 0 12px 28px rgba(41, 53, 60, 0.12);
     }
 
     ::ng-deep .mat-mdc-card-content {
@@ -198,6 +199,45 @@
     ::ng-deep .mat-mdc-card-actions {
         padding: 16px 20px;
         border-top: 1px solid #F0F0F0;
+    }
+}
+
+// NUEVA SECCIÓN DE MULTIMEDIA
+.card-media {
+    width: 100%;
+    height: 180px;
+    background: #F8F9FA;
+    position: relative;
+    border-bottom: 1px solid #F0F0F0;
+
+    img, video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .media-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        ::ng-deep .mat-mdc-progress-spinner circle {
+            stroke: #AAC7D8;
+        }
+    }
+
+    .media-tag {
+        position: absolute;
+        bottom: 12px;
+        right: 12px;
+        background: rgba(41, 53, 60, 0.8);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        backdrop-filter: blur(4px);
     }
 }
 
@@ -284,6 +324,12 @@
         background: #29353C;
         color: white;
         mat-icon { color: #AAC7D8; }
+    }
+
+    &.status-pending {
+        background: #F0F2F5;
+        color: #44576D;
+        mat-icon { color: #44576D; }
     }
 }
 

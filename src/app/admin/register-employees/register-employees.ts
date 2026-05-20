@@ -105,7 +105,7 @@ export class RegisterEmployees {
       this.userService.postEmployee(this.registerForm.value).subscribe({
         next: (data) => {
          
-          
+          this.registerForm.reset();
           this.snackBar.open(
             `${data}`,
             'Cerrar',

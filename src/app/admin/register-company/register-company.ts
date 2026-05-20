@@ -94,6 +94,7 @@ export class RegisterCompany {
   onSubmit() {
     this.companyService.postCompany(this.registerForm.value).subscribe({
       next: (data) => {
+        this.registerForm.reset();
           this.snackBar.open(
             `${data}`,
             'Cerrar',

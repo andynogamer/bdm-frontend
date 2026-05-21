@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, AfterViewChecked, inject } from '@angular/core';
 import { Header } from '../../shared/header/header';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,6 +21,7 @@ import { AccidentService } from '../../services/accident-service';
 import { MultimediaService } from '../../services/multimedia-service'; 
 // <-- IMPORTA AQUÍ TU NUEVO SERVICIO
 import { MessageService } from '../../services/message-service'; 
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-accident-detail',
@@ -36,6 +37,7 @@ import { MessageService } from '../../services/message-service';
   styleUrl: './accident-detail.scss',
 })
 export class AccidentDetail implements OnInit, AfterViewChecked {
+  readonly auth = inject(AuthService);
   siniestro: any; 
   isLoading = false;
   listaMultimedia: any[] = []; 
@@ -78,6 +80,9 @@ export class AccidentDetail implements OnInit, AfterViewChecked {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
       this.cargarDetalleSiniestro(id);
+    }
+    if(this.auth.userRole !== 2){
+      this.editForm.disable();
     }
   }
 

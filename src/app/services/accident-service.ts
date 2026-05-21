@@ -17,6 +17,12 @@ export class AccidentService {
     });
   }
 
+  updateAccidentPaymentInformation(payload: any): Observable<any> {
+    return this.http.post<any>(this.API_URL + '/admin/update', payload, {
+      withCredentials: true
+    });
+  }
+
   getAllAccidents(){
     return this.http.get<any[]>(this.API_URL, {
       withCredentials: true

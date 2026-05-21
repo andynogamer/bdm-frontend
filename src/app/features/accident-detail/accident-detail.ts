@@ -63,7 +63,7 @@ export class AccidentDetail implements OnInit {
   ) {
     // Inicializamos el formulario
     this.editForm = this.fb.group({
-      estatus_actual: [''],
+      estatus_siniestro: [''],
       monto_pago: [''],
       monto_deducible_aplicado: [''],
       fecha_compromiso: ['']
@@ -79,7 +79,7 @@ export class AccidentDetail implements OnInit {
 
   cargarDetalleSiniestro(id: number) {
     this.isLoading = true;
-    
+    this.cdr.detectChanges();
     // TODO: Llama a tu API SELECT_ONE
     
     this.accidentService.getAccidentById(id).subscribe({
@@ -89,8 +89,15 @@ export class AccidentDetail implements OnInit {
         //this.cargarMultimediaSiExiste();
         this.isLoading = false;
         this.cdr.detectChanges();
+      }, 
+      error: (e) => {
+        console.error('Error al cargar detalle:', e);
+        this.isLoading = false;
+        this.cdr.detectChanges(); 
       }
     });
+
+    
     
 
     
@@ -99,7 +106,7 @@ export class AccidentDetail implements OnInit {
 
   patchFormValues() {
     this.editForm.patchValue({
-      estatus_actual: this.siniestro.estatus_actual || 'REGISTRADO',
+      estatus_siniestro: this.siniestro.estatus_actual|| 'REGISTRADO',
       monto_pago: this.siniestro.monto_pago,
       monto_deducible_aplicado: this.siniestro.monto_deducible_aplicado,
       fecha_compromiso: this.siniestro.fecha_compromiso ? new Date(this.siniestro.fecha_compromiso) : null
@@ -108,6 +115,7 @@ export class AccidentDetail implements OnInit {
 
   guardarCambios() {
     this.isLoading = true;
+    this.cdr.detectChanges(); // <-- 1. AVISAMOS QUE EMPEZÓ A GUARDAR
     
     // Formateamos la fecha si existe para mandarla como YYYY-MM-DD
     const formValues = this.editForm.value;
@@ -126,19 +134,30 @@ export class AccidentDetail implements OnInit {
 
     console.log('Datos a actualizar:', payload);
     
-    // Simulación de éxito
-    setTimeout(() => {
-      this.siniestro.estatus_actual = formValues.estatus_actual;
-      this.siniestro.monto_pago = formValues.monto_pago;
-      this.siniestro.monto_deducible_aplicado = formValues.monto_deducible_aplicado;
-      this.siniestro.fecha_compromiso = fechaCompromisoFormat;
-      
-      this.isLoading = false;
-      this.snackBar.open('Datos actualizados correctamente', 'Cerrar', { duration: 3000 });
-      this.cdr.detectChanges();
-    }, 1000);
-  }
+    // LLAMADA REAL A TU SERVICIO (Sin setTimeouts)
+    this.accidentService.updateAccidentPaymentInformation(payload).subscribe({
+      next: (data) => {
+        // 2. ACTUALIZAMOS LOS DATOS LOCALMENTE PARA QUE SE REFLEJEN EN LA VISTA
+        this.siniestro.estatus_actual = formValues.estatus_siniestro;
+        this.siniestro.monto_pago = formValues.monto_pago;
+        this.siniestro.monto_deducible_aplicado = formValues.monto_deducible_aplicado;
+        // Guardamos la fecha original del formulario para que el DatePicker no falle
+        this.siniestro.fecha_compromiso = formValues.fecha_compromiso; 
+        
+        this.isLoading = false;
+        this.editForm.markAsPristine(); 
+        this.cdr.detectChanges(); 
 
+        this.snackBar.open(data.data || data, 'Cerrar', { duration: 3000 });
+      },
+      error: (e) => {
+        this.isLoading = false;
+        this.cdr.detectChanges(); 
+        
+        this.snackBar.open(e.error?.error || 'Error al actualizar', 'Cerrar', { duration: 3000 });
+      }
+    });
+  }
   // Lógica gráfica para los estatus (reutilizada)
   getStatusClass(estatus: string | null): string {
     const e = estatus || 'REGISTRADO';

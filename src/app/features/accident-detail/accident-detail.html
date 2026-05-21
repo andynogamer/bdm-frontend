@@ -123,7 +123,7 @@
                         <div class="form-row">
                             <mat-form-field appearance="outline" class="full-width">
                                 <mat-label>Estatus del Siniestro</mat-label>
-                                <mat-select formControlName="estatus_actual">
+                                <mat-select formControlName="estatus_siniestro">
                                     @for (estatus of estatusOptions; track estatus) {
                                         <mat-option [value]="estatus">{{estatus}}</mat-option>
                                     }

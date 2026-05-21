@@ -18,4 +18,11 @@ export class MultimediaService {
     })
 
   }
+
+  getMetadataByAccidentId(idSiniestro: number): Observable<any[]> {
+    
+    return this.http.get<any[]>(`${this.API_URL}/getall/${idSiniestro}`, {
+      withCredentials: true
+    });
+  }
 }

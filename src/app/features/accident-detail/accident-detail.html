@@ -177,11 +177,19 @@
                         <div class="image-grid">
                             @for (media of listaMultimedia; track media.id_multimedia) {
                                 <div class="image-card">
-                                    @if (media.mime_type.includes('video')) {
-                                        <video [src]="media.safeUrl" controls class="evidence-img"></video>
-                                    } @else {
-                                        <img [src]="media.safeUrl" class="evidence-img">
+                                    @if (media.safeUrl) {
+                                        @if (media.mime_type.includes('video')) {
+                                            <video [src]="media.safeUrl" controls class="evidence-img"></video>
+                                        } @else {
+                                            <img [src]="media.safeUrl" class="evidence-img">
+                                        }
+                                    } 
+                                    @else {
+                                        <div class="media-loading">
+                                            <mat-spinner diameter="40"></mat-spinner>
+                                        </div>
                                     }
+                                    <div class="media-tag">{{ media.etiqueta }}</div>
                                 </div>
                             } @empty {
                                 <div class="empty-gallery">

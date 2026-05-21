@@ -15,10 +15,10 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
-import { AccidentService } from '../../services/accident-service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; // <-- Añadido para el spinner
 
-// TODO: Importa tu servicio real
-// import { AccidentService } from '../../services/accident.service';
+import { AccidentService } from '../../services/accident-service';
+import { MultimediaService } from '../../services/multimedia-service'; // <-- INYECTADO
 
 @Component({
   selector: 'app-accident-detail',
@@ -27,22 +27,18 @@ import { AccidentService } from '../../services/accident-service';
   imports: [
     CommonModule, Header, MatCardModule, MatButtonModule, MatIconModule, 
     MatChipsModule, MatTabsModule, MatInputModule, MatSelectModule,
-    MatDatepickerModule, ReactiveFormsModule, RouterModule, MatSnackBarModule, MatDividerModule
+    MatDatepickerModule, ReactiveFormsModule, RouterModule, MatSnackBarModule, MatDividerModule,
+    MatProgressSpinnerModule // <-- Añadido
   ],
   templateUrl: './accident-detail.html',
   styleUrl: './accident-detail.scss',
 })
 export class AccidentDetail implements OnInit {
-  siniestro: any; // Aquí guardaremos la data tal cual viene de vw_info_siniestros
+  siniestro: any; 
   isLoading = false;
-  
-  // Array de multimedia (puedes llenarlo con otra petición a la API)
   listaMultimedia: any[] = []; 
-
-  // Formulario para los datos editables (Admin)
   editForm: FormGroup;
 
-  // Catálogo de estatus obligatorios
   estatusOptions = [
     'REGISTRADO',
     'RECHAZADO',
@@ -59,9 +55,9 @@ export class AccidentDetail implements OnInit {
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef,
-    public accidentService: AccidentService
+    public accidentService: AccidentService,
+    public multimediaService: MultimediaService // <-- AÑADIDO AL CONSTRUCTOR
   ) {
-    // Inicializamos el formulario
     this.editForm = this.fb.group({
       estatus_siniestro: [''],
       monto_pago: [''],
@@ -80,13 +76,16 @@ export class AccidentDetail implements OnInit {
   cargarDetalleSiniestro(id: number) {
     this.isLoading = true;
     this.cdr.detectChanges();
-    // TODO: Llama a tu API SELECT_ONE
     
     this.accidentService.getAccidentById(id).subscribe({
-      next: (data) => {
-        this.siniestro = data;
+      next: (data: any) => {
+        // Validación por si tu API devuelve [{...}]
+        this.siniestro = Array.isArray(data) ? data[0] : data; 
         this.patchFormValues();
-        //this.cargarMultimediaSiExiste();
+        
+        // <-- MANDAMOS LLAMAR A LA MULTIMEDIA AHORA SÍ
+        this.cargarMultimediaSiExiste(this.siniestro.id_siniestro);
+        
         this.isLoading = false;
         this.cdr.detectChanges();
       }, 
@@ -96,14 +95,45 @@ export class AccidentDetail implements OnInit {
         this.cdr.detectChanges(); 
       }
     });
-
-    
-    
-
-    
-    
   }
 
+  // ==========================================
+  // NUEVA LÓGICA MULTIMEDIA
+  // ==========================================
+  cargarMultimediaSiExiste(idSiniestro: number) {
+    // 1. Pedimos primero el arreglo ligero de metadata
+    this.multimediaService.getMetadataByAccidentId(idSiniestro).subscribe({
+      next: (metadata: any[]) => {
+        
+        // 2. Preparamos el array y le ponemos safeUrl en null para mostrar spinners
+        this.listaMultimedia = metadata.map(item => ({
+          ...item,
+          safeUrl: null
+        }));
+        this.cdr.detectChanges();
+
+        // 3. Iteramos y pedimos el archivo pesado 1 por 1
+        this.listaMultimedia.forEach(media => {
+          this.multimediaService.getMultimediaById(media.id_multimedia).subscribe({
+            next: (blobData: any) => {
+              // Como tu JSON ya trae el string completo con cabecera en "evidencia"
+              media.safeUrl = this.sanitizer.bypassSecurityTrustUrl(blobData.evidencia);
+              this.cdr.detectChanges(); // Refrescamos la vista para que quite el spinner
+            },
+            error: (e) => {
+              console.error(`Error al cargar la evidencia ${media.id_multimedia}:`, e);
+            }
+          });
+        });
+
+      },
+      error: (e) => {
+        console.error('Error al cargar metadata de multimedia:', e);
+      }
+    });
+  }
+
+  // ... (El resto de tus métodos siguen exactamente igual: patchFormValues, guardarCambios, getStatusClass, getStatusIcon)
   patchFormValues() {
     this.editForm.patchValue({
       estatus_siniestro: this.siniestro.estatus_actual|| 'REGISTRADO',
@@ -115,9 +145,8 @@ export class AccidentDetail implements OnInit {
 
   guardarCambios() {
     this.isLoading = true;
-    this.cdr.detectChanges(); // <-- 1. AVISAMOS QUE EMPEZÓ A GUARDAR
+    this.cdr.detectChanges(); 
     
-    // Formateamos la fecha si existe para mandarla como YYYY-MM-DD
     const formValues = this.editForm.value;
     let fechaCompromisoFormat = null;
     
@@ -131,17 +160,12 @@ export class AccidentDetail implements OnInit {
       ...formValues,
       fecha_compromiso: fechaCompromisoFormat
     };
-
-    console.log('Datos a actualizar:', payload);
     
-    // LLAMADA REAL A TU SERVICIO (Sin setTimeouts)
     this.accidentService.updateAccidentPaymentInformation(payload).subscribe({
       next: (data) => {
-        // 2. ACTUALIZAMOS LOS DATOS LOCALMENTE PARA QUE SE REFLEJEN EN LA VISTA
         this.siniestro.estatus_actual = formValues.estatus_siniestro;
         this.siniestro.monto_pago = formValues.monto_pago;
         this.siniestro.monto_deducible_aplicado = formValues.monto_deducible_aplicado;
-        // Guardamos la fecha original del formulario para que el DatePicker no falle
         this.siniestro.fecha_compromiso = formValues.fecha_compromiso; 
         
         this.isLoading = false;
@@ -153,12 +177,11 @@ export class AccidentDetail implements OnInit {
       error: (e) => {
         this.isLoading = false;
         this.cdr.detectChanges(); 
-        
         this.snackBar.open(e.error?.error || 'Error al actualizar', 'Cerrar', { duration: 3000 });
       }
     });
   }
-  // Lógica gráfica para los estatus (reutilizada)
+
   getStatusClass(estatus: string | null): string {
     const e = estatus || 'REGISTRADO';
     switch (e) {

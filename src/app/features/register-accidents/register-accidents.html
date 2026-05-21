@@ -74,7 +74,7 @@
                 <mat-select formControlName="id_poliza">
                     @for (poliza of polizas; track poliza.id_poliza) {
                         <mat-option [value]="poliza.id_poliza">
-                            {{poliza.numero_poliza}} - {{poliza.compania}}
+                            {{poliza.id_poliza}} - {{poliza.numero_poliza}} - {{poliza.nombre_compania}}
                         </mat-option>
                     }
                 </mat-select>

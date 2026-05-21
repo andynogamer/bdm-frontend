@@ -69,12 +69,16 @@ export class RegisterAccidents implements OnInit {
   }
 
   cargarPolizas() {
-    // TODO: Llamada a tu API para traer las pólizas activas del usuario
-    // Mock de ejemplo:
-    this.polizas = [
-      { id_poliza: 1, numero_poliza: 'POL-001', compania: 'Qualitas' },
-      { id_poliza: 2, numero_poliza: 'POL-002', compania: 'GNP' }
-    ];
+    this.policyService.getPolicies().subscribe({
+      next: (data) =>{
+        this.polizas = data;
+      },
+      error: (e) => {
+        console.error('Error al cargar polizas:', e);
+        this.snackBar.open('Error al cargar la lista de polizas', 'Cerrar', { duration: 3000 });
+      }
+    })
+    
   }
 
   onFilesSelected(event: any) {

@@ -11,6 +11,19 @@ export class AccidentService {
 
   constructor(private http: HttpClient) { }
 
+
+  /**
+   * Busca siniestros basados en el número de póliza, placas o nombre del cliente.
+   * El backend determinará los permisos basados en la sesión activa.
+   * @param termino El string de búsqueda ingresado por el usuario
+   */
+  searchAccidents(termino: string): Observable<any[]> {
+    
+    return this.http.get<any[]>(`${this.API_URL}/search/${termino}`, {
+      withCredentials: true
+    });
+  }
+
   postAccident(payload: any): Observable<any> {
     return this.http.post<any>(this.API_URL + '/register', payload, {
       withCredentials: true

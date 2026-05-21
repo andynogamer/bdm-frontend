@@ -37,11 +37,21 @@
     <div class="right-panel">
         <div class="search-header">
             <h1>Gestión de Siniestros</h1>
+            
             <mat-form-field appearance="outline" class="search-field">
-                <mat-label>Buscar por póliza o cliente</mat-label>
+                <mat-label>Buscar por póliza, placas o cliente</mat-label>
                 <mat-icon matPrefix>search</mat-icon>
-                <input type="search" matInput placeholder="Ej. Qualitas o Juan Pérez">
+                <input type="search" matInput [formControl]="searchControl" placeholder="Ej. d712cb..., ABC-123 o Juan">
+                
+                @if (isSearching) {
+                    <mat-spinner matSuffix diameter="20" style="margin-right: 12px;"></mat-spinner>
+                } @else if (searchControl.value) {
+                    <button mat-icon-button matSuffix (click)="searchControl.setValue('')" title="Borrar búsqueda">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                }
             </mat-form-field>
+
         </div>
 
         <div class="accidents-list">

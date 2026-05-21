@@ -205,10 +205,56 @@
             <mat-tab label="Seguimiento">
                  <div class="tab-content">
                     <div class="chat-container">
-                        <div class="empty-gallery">
-                            <mat-icon>forum</mat-icon>
-                            <p>Módulo de chat en construcción...</p>
+                        
+                        <div class="chat-messages" #chatScroll>
+                            
+                            @for (mensaje of mensajes; track mensaje.id_mensaje) {
+                                <div class="message-wrapper" [ngClass]="mensaje.id_usuario === idSesion ? 'outgoing' : 'incoming'">
+                                    
+                                    @if (mensaje.id_usuario !== idSesion) {
+                                        <div class="message-avatar">
+                                            <mat-icon>person</mat-icon>
+                                        </div>
+                                    }
+
+                                    <div class="message-content">
+                                        <div class="message-header">
+                                            <strong>{{ mensaje.alias_usuario || mensaje.nombre_usuario }}</strong>
+                                            <span>{{ mensaje.fecha_hora_mensaje | date:'dd/MM/yyyy HH:mm' }}</span>
+                                        </div>
+                                        <div class="message-bubble">
+                                            <p>{{ mensaje.texto_mensaje }}</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            } @empty {
+                                <div class="empty-chat">
+                                    <mat-icon>forum</mat-icon>
+                                    <p>No hay registro de seguimiento. Sé el primero en escribir.</p>
+                                </div>
+                            }
+                            
                         </div>
+                        
+                        <div class="chat-input-area">
+                            <mat-form-field appearance="outline" class="chat-input-field">
+                                <input matInput placeholder="Escribe un comentario o actualización..." 
+                                       [formControl]="mensajeControl" 
+                                       (keyup.enter)="enviarMensaje()">
+                                
+                                <button mat-icon-button matSuffix color="primary" class="send-btn"
+                                        [disabled]="mensajeControl.invalid || isSendingMessage" 
+                                        (click)="enviarMensaje()">
+                                    @if (isSendingMessage) {
+                                        <mat-spinner diameter="20"></mat-spinner>
+                                    } @else {
+                                        <mat-icon>send</mat-icon>
+                                    }
+                                </button>
+                            </mat-form-field>
+                        </div>
+
                     </div>
                  </div>
             </mat-tab>

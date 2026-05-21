@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { Header } from '../../shared/header/header';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,15 +10,17 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; // <-- Añadido para el spinner
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AccidentService } from '../../services/accident-service';
-import { MultimediaService } from '../../services/multimedia-service'; // <-- INYECTADO
+import { MultimediaService } from '../../services/multimedia-service'; 
+// <-- IMPORTA AQUÍ TU NUEVO SERVICIO
+import { MessageService } from '../../services/message-service'; 
 
 @Component({
   selector: 'app-accident-detail',
@@ -28,25 +30,30 @@ import { MultimediaService } from '../../services/multimedia-service'; // <-- IN
     CommonModule, Header, MatCardModule, MatButtonModule, MatIconModule, 
     MatChipsModule, MatTabsModule, MatInputModule, MatSelectModule,
     MatDatepickerModule, ReactiveFormsModule, RouterModule, MatSnackBarModule, MatDividerModule,
-    MatProgressSpinnerModule // <-- Añadido
+    MatProgressSpinnerModule 
   ],
   templateUrl: './accident-detail.html',
   styleUrl: './accident-detail.scss',
 })
-export class AccidentDetail implements OnInit {
+export class AccidentDetail implements OnInit, AfterViewChecked {
   siniestro: any; 
   isLoading = false;
   listaMultimedia: any[] = []; 
   editForm: FormGroup;
 
+  // --- VARIABLES PARA EL CHAT ---
+  mensajes: any[] = [];
+  idSesion: number = 0;
+  mensajeControl = new FormControl('', [Validators.required, Validators.maxLength(1024)]);
+  isSendingMessage = false;
+  
+  // Referencia al contenedor del chat para hacer autoscroll
+  @ViewChild('chatScroll') private chatScrollContainer!: ElementRef;
+
   estatusOptions = [
-    'REGISTRADO',
-    'RECHAZADO',
-    'ACEPTADO',
-    'ACEPTADO CON PAGO DE DEDUCIBLE',
-    'ACEPTADO SIN PAGO DE DEDUCIBLE',
-    'APLICA PAGO PARA REPARACIÓN DE LA UNIDAD',
-    'PÉRDIDA TOTAL, APLICA PAGO COMPLETO DE LA UNIDAD'
+    'REGISTRADO', 'RECHAZADO', 'ACEPTADO', 
+    'ACEPTADO CON PAGO DE DEDUCIBLE', 'ACEPTADO SIN PAGO DE DEDUCIBLE',
+    'APLICA PAGO PARA REPARACIÓN DE LA UNIDAD', 'PÉRDIDA TOTAL, APLICA PAGO COMPLETO DE LA UNIDAD'
   ];
 
   constructor(
@@ -56,7 +63,8 @@ export class AccidentDetail implements OnInit {
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef,
     public accidentService: AccidentService,
-    public multimediaService: MultimediaService // <-- AÑADIDO AL CONSTRUCTOR
+    public multimediaService: MultimediaService,
+    public messageService: MessageService // <-- INYECTADO
   ) {
     this.editForm = this.fb.group({
       estatus_siniestro: [''],
@@ -73,18 +81,23 @@ export class AccidentDetail implements OnInit {
     }
   }
 
+  // Se ejecuta después de cada actualización de la vista (sirve para el autoscroll del chat)
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
   cargarDetalleSiniestro(id: number) {
     this.isLoading = true;
     this.cdr.detectChanges();
     
     this.accidentService.getAccidentById(id).subscribe({
       next: (data: any) => {
-        // Validación por si tu API devuelve [{...}]
         this.siniestro = Array.isArray(data) ? data[0] : data; 
         this.patchFormValues();
         
-        // <-- MANDAMOS LLAMAR A LA MULTIMEDIA AHORA SÍ
+        // Disparamos la carga de multimedia y los mensajes del chat
         this.cargarMultimediaSiExiste(this.siniestro.id_siniestro);
+        this.cargarMensajes(this.siniestro.id_siniestro);
         
         this.isLoading = false;
         this.cdr.detectChanges();
@@ -98,42 +111,85 @@ export class AccidentDetail implements OnInit {
   }
 
   // ==========================================
-  // NUEVA LÓGICA MULTIMEDIA
+  // LÓGICA DEL CHAT Y MENSAJES
   // ==========================================
-  cargarMultimediaSiExiste(idSiniestro: number) {
-    // 1. Pedimos primero el arreglo ligero de metadata
-    this.multimediaService.getMetadataByAccidentId(idSiniestro).subscribe({
-      next: (metadata: any[]) => {
-        
-        // 2. Preparamos el array y le ponemos safeUrl en null para mostrar spinners
-        this.listaMultimedia = metadata.map(item => ({
-          ...item,
-          safeUrl: null
-        }));
+
+  cargarMensajes(idSiniestro: number) {
+    this.messageService.getMessagesByAccident(idSiniestro).subscribe({
+      next: (res: any) => {
+        // Asignamos la data a nuestros arreglos locales
+        this.mensajes = res.data || [];
+        this.idSesion = res.id_sesion;
         this.cdr.detectChanges();
-
-        // 3. Iteramos y pedimos el archivo pesado 1 por 1
-        this.listaMultimedia.forEach(media => {
-          this.multimediaService.getMultimediaById(media.id_multimedia).subscribe({
-            next: (blobData: any) => {
-              // Como tu JSON ya trae el string completo con cabecera en "evidencia"
-              media.safeUrl = this.sanitizer.bypassSecurityTrustUrl(blobData.evidencia);
-              this.cdr.detectChanges(); // Refrescamos la vista para que quite el spinner
-            },
-            error: (e) => {
-              console.error(`Error al cargar la evidencia ${media.id_multimedia}:`, e);
-            }
-          });
-        });
-
+        this.scrollToBottom();
       },
       error: (e) => {
-        console.error('Error al cargar metadata de multimedia:', e);
+        console.error('Error al cargar historial de chat:', e);
       }
     });
   }
 
-  // ... (El resto de tus métodos siguen exactamente igual: patchFormValues, guardarCambios, getStatusClass, getStatusIcon)
+  enviarMensaje() {
+    if (this.mensajeControl.invalid || this.isSendingMessage) return;
+
+    const texto = this.mensajeControl.value?.trim();
+    if (!texto) return;
+
+    this.isSendingMessage = true;
+    this.cdr.detectChanges();
+
+    const payload = {
+      id_siniestro: this.siniestro.id_siniestro,
+      texto: texto
+    };
+
+    this.messageService.postMessage(payload).subscribe({
+      next: () => {
+        // Limpiamos el input y bajamos la bandera de carga
+        this.mensajeControl.reset();
+        this.isSendingMessage = false;
+        
+        // Volvemos a pedir los mensajes para tener el ID real y la fecha de la Base de Datos
+        this.cargarMensajes(this.siniestro.id_siniestro);
+      },
+      error: (e) => {
+        this.isSendingMessage = false;
+        this.cdr.detectChanges();
+        this.snackBar.open('No se pudo enviar el mensaje', 'Cerrar', { duration: 3000 });
+      }
+    });
+  }
+
+  // Función para mantener el scroll siempre abajo en el chat
+  scrollToBottom(): void {
+    try {
+      if (this.chatScrollContainer) {
+        this.chatScrollContainer.nativeElement.scrollTop = this.chatScrollContainer.nativeElement.scrollHeight;
+      }
+    } catch(err) { }
+  }
+
+  // ... (MANTÉN EXACTAMENTE IGUAL EL RESTO DE TUS FUNCIONES: cargarMultimediaSiExiste, patchFormValues, guardarCambios, getStatusClass, getStatusIcon)
+  cargarMultimediaSiExiste(idSiniestro: number) {
+    this.multimediaService.getMetadataByAccidentId(idSiniestro).subscribe({
+      next: (metadata: any[]) => {
+        this.listaMultimedia = metadata.map(item => ({ ...item, safeUrl: null }));
+        this.cdr.detectChanges();
+
+        this.listaMultimedia.forEach(media => {
+          this.multimediaService.getMultimediaById(media.id_multimedia).subscribe({
+            next: (blobData: any) => {
+              media.safeUrl = this.sanitizer.bypassSecurityTrustUrl(blobData.evidencia);
+              this.cdr.detectChanges(); 
+            },
+            error: (e) => console.error(`Error al cargar la evidencia ${media.id_multimedia}:`, e)
+          });
+        });
+      },
+      error: (e) => console.error('Error al cargar metadata de multimedia:', e)
+    });
+  }
+
   patchFormValues() {
     this.editForm.patchValue({
       estatus_siniestro: this.siniestro.estatus_actual|| 'REGISTRADO',

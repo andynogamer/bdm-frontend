@@ -732,3 +732,166 @@
     text-overflow: ellipsis;
     backdrop-filter: blur(4px);
 }
+
+
+/* ================================================= */
+/* MÓDULO DE CHAT (SEGUIMIENTO) */
+/* ================================================= */
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 550px; // Altura fija para que el chat haga scroll por dentro
+    background: #F8F9FA;
+    border-radius: 16px;
+    border: 1px solid #E6E6E6;
+    overflow: hidden;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    
+    // Suaviza el scroll
+    scroll-behavior: smooth;
+}
+
+.empty-chat {
+    text-align: center;
+    color: #768A96;
+    margin: auto 0;
+    
+    mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        color: #AAC7D8;
+        margin-bottom: 12px;
+        opacity: 0.5;
+    }
+}
+
+/* ESTRUCTURA DEL MENSAJE */
+.message-wrapper {
+    display: flex;
+    max-width: 85%;
+    gap: 12px;
+
+    /* MENSAJE ENTRANTE (Otras personas, a la izquierda) */
+    &.incoming {
+        align-self: flex-start;
+        
+        .message-bubble {
+            background: white;
+            border: 1px solid #E6E6E6;
+            border-radius: 0 16px 16px 16px; // Esquina superior izquierda puntiaguda
+            color: #29353C;
+        }
+    }
+
+    /* MENSAJE SALIENTE (Yo mismo, a la derecha) */
+    &.outgoing {
+        align-self: flex-end;
+        flex-direction: row-reverse; // Voltea el orden para que quede pegado a la derecha
+        
+        .message-header {
+            flex-direction: row-reverse; // Nombre a la derecha, fecha a la izquierda
+        }
+
+        .message-bubble {
+            background: #44576D; // Azul corporativo
+            color: white;
+            border-radius: 16px 0 16px 16px; // Esquina superior derecha puntiaguda
+        }
+    }
+}
+
+.message-avatar {
+    width: 38px;
+    height: 38px;
+    background: #AAC7D8;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    mat-icon {
+        color: white;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.message-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.message-header {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 0.8rem;
+    
+    strong {
+        color: #44576D;
+        font-weight: 600;
+    }
+    
+    span {
+        color: #768A96;
+        font-size: 0.7rem;
+    }
+}
+
+.message-bubble {
+    padding: 14px 18px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    
+    p {
+        margin: 0;
+        word-wrap: break-word; // Si escriben una palabra enorme no romperá el diseño
+    }
+}
+
+/* ÁREA DE INPUT (Donde el usuario escribe) */
+.chat-input-area {
+    padding: 20px;
+    background: white;
+    border-top: 1px solid #E6E6E6;
+
+    .chat-input-field {
+        width: 100%;
+        margin-bottom: -1.25em; // Elimina el espacio vacío por defecto de "mat-error" en Angular
+        
+        ::ng-deep .mdc-text-field--outlined {
+            --mdc-outlined-text-field-container-shape: 30px; // Input redondeado
+            background: #F8F9FA;
+        }
+
+        ::ng-deep .mat-mdc-form-field-flex {
+            padding: 0 8px 0 16px; // Ajusta el padding para acomodar el botón
+        }
+    }
+    
+    .send-btn {
+        margin-right: 4px;
+        
+        mat-icon {
+            color: #44576D;
+        }
+
+        &[disabled] mat-icon {
+            color: #AAC7D8; // Icono atenuado si no hay texto
+        }
+    }
+}

@@ -49,7 +49,7 @@ export const routes: Routes = [
         component: UserProfile
     },
     {
-        path:'accident-detail',
+        path:'accident-detail/:id',
         component: AccidentDetail
     },
     {

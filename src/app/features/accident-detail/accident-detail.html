@@ -1,6 +1,7 @@
 <app-header></app-header>
 
-<div class="detail-container" *ngIf="siniestro">
+@if (siniestro) {
+<div class="detail-container">
     <div class="left-panel">
         <div class="left-content">
             <div class="hero-text">
@@ -12,28 +13,28 @@
                     <mat-icon>policy</mat-icon>
                     <div>
                         <strong>Número de Siniestro</strong>
-                        <span>#{{siniestro.id}}</span>
+                        <span>#{{siniestro.id_siniestro}}</span>
                     </div>
                 </div>
                 <div class="info-card">
                     <mat-icon>business</mat-icon>
                     <div>
                         <strong>Aseguradora</strong>
-                        <span>{{siniestro.insurance}}</span>
+                        <span>{{siniestro.nombre_compania}}</span>
                     </div>
                 </div>
-                <div class="info-card">
+                <div class="info-card" >
                     <mat-icon>badge</mat-icon>
                     <div>
-                        <strong>Número de Póliza</strong>
-                        <span>{{siniestro.policyNumber}}</span>
+                        <strong>Póliza Afectada</strong>
+                        <span>{{ (siniestro.numero_poliza | slice:0:15) }}...</span>
                     </div>
                 </div>
                 <div class="info-card">
                     <mat-icon>calendar_month</mat-icon>
                     <div>
                         <strong>Fecha de Registro</strong>
-                        <span>{{siniestro.accidentDate | date:'dd/MM/yyyy'}}</span>
+                        <span>{{siniestro.fecha_registro | date:'dd/MM/yyyy'}}</span>
                     </div>
                 </div>
             </div>
@@ -49,40 +50,120 @@
     <div class="right-panel">
         <div class="detail-header">
             <div class="title-section">
-                <h1>Siniestro <span>#{{siniestro.id}}</span></h1>
-                <p class="subtitle">{{siniestro.insurance}} · Póliza: {{siniestro.policyNumber}}</p>
+                <h1>Siniestro <span>#{{siniestro.id_siniestro}}</span></h1>
+                <p class="subtitle">
+                    Asegurado: <strong>{{siniestro.nombre_completo_asegurado}}</strong> 
+                    <span class="user-alias">({{siniestro.correo_asegurado}})</span>
+                </p>
             </div>
-            <mat-chip [ngClass]="'status-' + siniestro.estatus" class="status-chip">
-                <mat-icon>{{getStatusIcon(siniestro.estatus)}}</mat-icon>
-                <span>{{ getStatusName(siniestro.estatus) }}</span>
+            <mat-chip [ngClass]="getStatusClass(siniestro.estatus_actual)" class="status-chip">
+                <mat-icon>{{getStatusIcon(siniestro.estatus_actual)}}</mat-icon>
+                <span>{{ siniestro.estatus_actual ? siniestro.estatus_actual : 'REGISTRADO' }}</span>
             </mat-chip>
         </div>
 
         <mat-tab-group dynamicHeight class="custom-tabs">
-            <mat-tab label="Detalles Técnicos">
+            
+            <mat-tab label="Información y Gestión">
                 <div class="tab-content">
-                    <div class="details-grid">
-                        <div class="detail-group">
-                            <label>Asegurado</label>
-                            <p>{{siniestro.userAffected}}</p>
+                    
+                    <h3 class="section-title">Información del Suceso</h3>
+                    <div class="details-grid readonly-data" style="margin-bottom: 25px;">
+                        <div class="detail-group half">
+                            <label>Conductor (Chofer)</label>
+                            <p><mat-icon>person</mat-icon> {{siniestro.nombre_chofer}}</p>
                         </div>
-                        <div class="detail-group">
-                            <label>Datos de la Unidad</label>
-                            <p>{{siniestro.unitData}}</p>
+                        <div class="detail-group half">
+                            <label>Fecha y Hora del Incidente</label>
+                            <p><mat-icon>schedule</mat-icon> {{siniestro.fecha_hora_siniestro | date:'dd/MM/yyyy - HH:mm'}}</p>
                         </div>
-                        <div class="detail-group">
+                        <div class="detail-group full-width">
                             <label>Ubicación</label>
-                            <p>{{siniestro.location}}</p>
+                            <p><mat-icon>location_on</mat-icon> {{siniestro.ubicacion}}</p>
                         </div>
-                        <div class="detail-group">
-                            <label>Fecha del Incidente</label>
-                            <p>{{siniestro.accidentDate | date:'dd/MM/yyyy - hh:mm a'}}</p>
+                        <div class="detail-group full-width">
+                            <label>Ajustador Asignado</label>
+                            <p><mat-icon>assignment_ind</mat-icon> {{siniestro.nombre_completo_ajustador}} ({{siniestro.alias_ajustador}})</p>
+                        </div>
+                        <div class="detail-group full-width">
+                            <label>Terceros Afectados</label>
+                            <p><mat-icon>commute</mat-icon> {{siniestro.unidad_involucrada}}</p>
                         </div>
                         <div class="detail-group full-width">
                             <label>Descripción del Suceso</label>
-                            <p class="description-text">{{siniestro.description}}</p>
+                            <p class="description-text">{{siniestro.descripcion}}</p>
                         </div>
                     </div>
+
+                    <h4 class="sub-section-title"><mat-icon>directions_car</mat-icon> Vehículo Involucrado</h4>
+                    <div class="details-grid readonly-data">
+                        <div class="detail-group full-width">
+                            <label>Descripción Física</label>
+                            <p><mat-icon>commute</mat-icon> {{siniestro.vehiculo_fisico}}</p>
+                        </div>
+                        <div class="detail-group half">
+                            <label>Placas</label>
+                            <p><mat-icon>pin</mat-icon> {{siniestro.placas_vehiculo}}</p>
+                        </div>
+                        <div class="detail-group half">
+                            <label>Número de Serie (VIN)</label>
+                            <p><mat-icon>qr_code</mat-icon> {{siniestro.numero_serie_vehiculo}}</p>
+                        </div>
+                        <div class="detail-group half">
+                            <label>Valor Comercial</label>
+                            <p><mat-icon>request_quote</mat-icon> {{ siniestro.valor_vehiculo | currency:'USD':'symbol':'1.2-2' }}</p>
+                        </div>
+                    </div>
+
+                    <mat-divider style="margin: 30px 0;"></mat-divider>
+
+                    <h3 class="section-title">Gestión de Gastos</h3>
+                    <form [formGroup]="editForm" (ngSubmit)="guardarCambios()" class="admin-edit-section">
+                        
+                        <div class="form-row">
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Estatus del Siniestro</mat-label>
+                                <mat-select formControlName="estatus_actual">
+                                    @for (estatus of estatusOptions; track estatus) {
+                                        <mat-option [value]="estatus">{{estatus}}</mat-option>
+                                    }
+                                </mat-select>
+                                <mat-icon matPrefix>track_changes</mat-icon>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-row">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Monto a Pagar ($)</mat-label>
+                                <input type="number" matInput formControlName="monto_pago" placeholder="Ej. 15000.00">
+                                <mat-icon matPrefix>payments</mat-icon>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                                <mat-label>Monto Deducible ($)</mat-label>
+                                <input type="number" matInput formControlName="monto_deducible_aplicado" placeholder="Ej. 5000.00">
+                                <mat-icon matPrefix>money_off</mat-icon>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-row">
+                            <mat-form-field appearance="outline" class="half-width">
+                                <mat-label>Fecha de Compromiso / Resolución</mat-label>
+                                <input matInput [matDatepicker]="picker" formControlName="fecha_compromiso">
+                                <mat-icon matPrefix>event_available</mat-icon>
+                                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="action-row">
+                            <button mat-raised-button class="submit-btn" type="submit" [disabled]="!editForm.dirty || isLoading">
+                                {{ isLoading ? 'GUARDANDO...' : 'GUARDAR CAMBIOS' }}
+                                <mat-icon>save</mat-icon>
+                            </button>
+                        </div>
+                    </form>
+
                 </div>
             </mat-tab>
 
@@ -94,74 +175,37 @@
                             <span>Evidencia del Siniestro</span>
                         </div>
                         <div class="image-grid">
-                            <div class="image-card" *ngFor="let img of images; let i = index">
-                                <img [src]="img" class="evidence-img" (click)="openImage(img)">
-                                <div class="image-overlay">
-                                    <mat-icon>zoom_in</mat-icon>
+                            @for (media of listaMultimedia; track media.id_multimedia) {
+                                <div class="image-card">
+                                    @if (media.mime_type.includes('video')) {
+                                        <video [src]="media.safeUrl" controls class="evidence-img"></video>
+                                    } @else {
+                                        <img [src]="media.safeUrl" class="evidence-img">
+                                    }
                                 </div>
-                            </div>
-                            <div class="empty-gallery" *ngIf="images.length === 0">
-                                <mat-icon>insert_photo</mat-icon>
-                                <p>No hay evidencia cargada para este siniestro</p>
-                            </div>
+                            } @empty {
+                                <div class="empty-gallery">
+                                    <mat-icon>insert_photo</mat-icon>
+                                    <p>Las evidencias están cargando o no existen archivos adjuntos.</p>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
             </mat-tab>
 
             <mat-tab label="Seguimiento">
-                <div class="tab-content">
+                 <div class="tab-content">
                     <div class="chat-container">
-                        <div class="chat-history">
-                            <div class="message incoming">
-                                <div class="message-avatar">
-                                    <mat-icon>support_agent</mat-icon>
-                                </div>
-                                <div class="message-content">
-                                    <div class="message-header">
-                                        <strong>Ajustador</strong>
-                                        <span>Hace 2 días</span>
-                                    </div>
-                                    <p>Registrando daños iniciales del vehículo. Se ha programado una inspección para el día de mañana.</p>
-                                </div>
-                            </div>
-                            <div class="message outgoing">
-                                <div class="message-content">
-                                    <div class="message-header">
-                                        <strong>Asegurado</strong>
-                                        <span>Hace 1 día</span>
-                                    </div>
-                                    <p>¿Cuándo se autoriza la reparación? Necesito una respuesta pronto.</p>
-                                </div>
-                                <div class="message-avatar">
-                                    <mat-icon>person</mat-icon>
-                                </div>
-                            </div>
-                            <div class="message incoming">
-                                <div class="message-avatar">
-                                    <mat-icon>support_agent</mat-icon>
-                                </div>
-                                <div class="message-content">
-                                    <div class="message-header">
-                                        <strong>Ajustador</strong>
-                                        <span>Hace 8 horas</span>
-                                    </div>
-                                    <p>La autorización está en proceso. En las próximas 48 horas recibirá respuesta.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="chat-input">
-                            <mat-form-field appearance="outline" class="input-field">
-                                <mat-label>Escribe un comentario...</mat-label>
-                                <input matInput placeholder="Agrega un seguimiento al siniestro">
-                                <button mat-icon-button matSuffix color="primary" class="send-button">
-                                    <mat-icon>send</mat-icon>
-                                </button>
-                            </mat-form-field>
+                        <div class="empty-gallery">
+                            <mat-icon>forum</mat-icon>
+                            <p>Módulo de chat en construcción...</p>
                         </div>
                     </div>
-                </div>
+                 </div>
             </mat-tab>
+
         </mat-tab-group>
     </div>
 </div>
+}

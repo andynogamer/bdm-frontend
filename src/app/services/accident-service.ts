@@ -23,4 +23,10 @@ export class AccidentService {
     })
 
   }
+
+  getAccidentById(id: number){
+    return this.http.get<any>(this.API_URL + `/get/${id}`, {
+      withCredentials: true
+    })
+  }
 }

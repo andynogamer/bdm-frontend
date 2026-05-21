@@ -15,64 +15,93 @@ import { RegisterPolicy } from './features/register-policy/register-policy';
 import { EditCompany } from './admin/edit-company/edit-company';
 import { EditPolicy } from './features/edit-policy/edit-policy';
 
+// IMPORTAMOS NUESTROS GUARDIANES
+import { authGuard } from './core/guards/auth.guard';
+import { publicGuard } from './core/guards/public.guard';
+
 export const routes: Routes = [
+    // --- RUTAS PÚBLICAS (Solo si NO estás logueado) ---
     {
         path: '',
-        component: Login
+        component: Login,
+        canActivate: [publicGuard] // <-- APLICADO AQUÍ
     },
     {
         path:'login',
-        component: Login
+        component: Login,
+        canActivate: [publicGuard] // <-- APLICADO AQUÍ
     },
+    
+    // --- RUTAS PRIVADAS (Solo si SÍ estás logueado) ---
     {
         path: 'register-users',
-        component: RegisterUsers
+        component: RegisterUsers,
+        canActivate: [authGuard] // <-- APLICADO AQUÍ
     },
     {
         path: 'users',
-        component: Users
+        component: Users,
+        canActivate: [authGuard]
     },
     {
         path: 'admin-register',
-        component: RegisterEmployees
+        component: RegisterEmployees,
+        canActivate: [authGuard]
     },
     {
         path:'home',
-        component:Home
+        component:Home,
+        canActivate: [authGuard]
     },
     {
         path:'register-accidents',
-        component: RegisterAccidents
+        component: RegisterAccidents,
+        canActivate: [authGuard]
     },
     {
         path:'profile',
-        component: UserProfile
+        component: UserProfile,
+        canActivate: [authGuard]
     },
     {
         path:'accident-detail/:id',
-        component: AccidentDetail
+        component: AccidentDetail,
+        canActivate: [authGuard]
     },
     {
         path: 'companies',
-        component: Companies
+        component: Companies,
+        canActivate: [authGuard]
     },
     {
         path: 'register-company',
-        component: RegisterCompany
+        component: RegisterCompany,
+        canActivate: [authGuard]
     },
     {
         path: 'policies',
-        component: Policies
+        component: Policies,
+        canActivate: [authGuard]
     },
     {
         path: 'register-policy',
-        component: RegisterPolicy
+        component: RegisterPolicy,
+        canActivate: [authGuard]
     },
     {
         path: 'edit-company/:id',
-        component: EditCompany
-    },{
+        component: EditCompany,
+        canActivate: [authGuard]
+    },
+    {
         path: 'edit-policy/:id',
-        component: EditPolicy
+        component: EditPolicy,
+        canActivate: [authGuard]
+    },
+    
+    // Ruta comodín por si escriben una URL que no existe
+    {
+        path: '**',
+        redirectTo: 'home' 
     }
 ];

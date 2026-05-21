@@ -17,6 +17,12 @@ export class User {
     });
   }
 
+  deleteLogin(){
+    return this.http.get<any>(this.API_URL + '/logout', {
+      withCredentials: true
+    })
+  }
+
   getAllInsured(){
     return this.http.get<any>(this.API_URL + '/insured', {
       withCredentials: true

@@ -16,7 +16,7 @@ import { EditCompany } from './admin/edit-company/edit-company';
 import { EditPolicy } from './features/edit-policy/edit-policy';
 
 // IMPORTAMOS NUESTROS GUARDIANES
-import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
 import { publicGuard } from './core/guards/public.guard';
 
 export const routes: Routes = [
@@ -36,67 +36,67 @@ export const routes: Routes = [
     {
         path: 'register-users',
         component: RegisterUsers,
-        canActivate: [authGuard] // <-- APLICADO AQUÍ
+        canActivate: [publicGuard] // <-- APLICADO AQUÍ
     },
     {
         path: 'users',
         component: Users,
-        canActivate: [authGuard]
+        canActivate: [roleGuard(2)]
     },
     {
         path: 'admin-register',
         component: RegisterEmployees,
-        canActivate: [authGuard]
+        canActivate: [roleGuard(2)]
     },
     {
         path:'home',
         component:Home,
-        canActivate: [authGuard]
+        canActivate: [roleGuard(0)]
     },
     {
         path:'register-accidents',
         component: RegisterAccidents,
-        canActivate: [authGuard]
+        canActivate: [roleGuard(1)]
     },
     {
         path:'profile',
         component: UserProfile,
-        canActivate: [authGuard]
+        canActivate: [roleGuard(0)]
     },
     {
         path:'accident-detail/:id',
         component: AccidentDetail,
-        canActivate: [authGuard]
+        canActivate: [roleGuard(0)]
     },
     {
         path: 'companies',
         component: Companies,
-        canActivate: [authGuard]
+        canActivate: [roleGuard(2)]
     },
     {
         path: 'register-company',
         component: RegisterCompany,
-        canActivate: [authGuard]
+        canActivate: [roleGuard(2)]
     },
     {
         path: 'policies',
         component: Policies,
-        canActivate: [authGuard]
+        canActivate: [roleGuard(2)]
     },
     {
         path: 'register-policy',
         component: RegisterPolicy,
-        canActivate: [authGuard]
+        canActivate: [roleGuard(2)]
     },
     {
         path: 'edit-company/:id',
         component: EditCompany,
-        canActivate: [authGuard]
+        canActivate: [roleGuard(2)]
     },
     {
         path: 'edit-policy/:id',
         component: EditPolicy,
-        canActivate: [authGuard]
+        canActivate: [roleGuard(2)]
     },
     
     // Ruta comodín por si escriben una URL que no existe
